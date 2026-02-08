@@ -1576,7 +1576,7 @@ async def generate_image(
             "prompt": prompt,
             "enhanced_prompt": enhanced_prompt,
             "style": request.style,
-            "size": size,
+            "size": final_size,
             "platform": request.marketing_platform,
             "brand_applied": brand_profile is not None,
             "image_url": "https://via.placeholder.com/1024x1024.png?text=Mock+Image",
