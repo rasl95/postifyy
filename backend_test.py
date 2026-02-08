@@ -219,17 +219,15 @@ class PostifyAPITester:
             return False, None
 
     def test_image_generation(self):
-        """Test AI image generation"""
+        """Test AI image generation with specific parameters"""
         success, response = self.run_test(
             "Generate AI Image",
             "POST",
             "generate-image",
             200,
             data={
-                "prompt": "A beautiful sunset over mountains",
-                "style": "realistic",
-                "size": "1024x1024",
-                "aspect_ratio": "1:1"
+                "prompt": "A vibrant sunset",
+                "style": "realistic"
             }
         )
         
@@ -240,6 +238,28 @@ class PostifyAPITester:
             return True
         else:
             print(f"❌ Image generation failed")
+            return False
+
+    def test_stripe_checkout(self):
+        """Test Stripe checkout session creation"""
+        success, response = self.run_test(
+            "Create Stripe Checkout Session",
+            "POST",
+            "stripe/create-checkout-session",
+            200,
+            data={
+                "plan": "pro",
+                "billing_period": "monthly"
+            }
+        )
+        
+        if success and 'checkout_url' in response:
+            checkout_url = response.get('checkout_url', '')
+            print(f"✅ Stripe checkout session created")
+            print(f"   Checkout URL: {checkout_url[:50]}...")
+            return True
+        else:
+            print(f"❌ Stripe checkout creation failed")
             return False
 
     def test_user_preferences(self):
