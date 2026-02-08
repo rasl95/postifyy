@@ -248,7 +248,7 @@ class PostifyAPITester:
         success, response = self.run_test(
             "Create Stripe Checkout Session",
             "POST",
-            "stripe/create-checkout-session",
+            "subscriptions/create-checkout",
             200,
             data={
                 "plan": "pro",
