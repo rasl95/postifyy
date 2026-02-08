@@ -365,6 +365,7 @@ class PostifyAPITester:
             ("Templates Endpoint", self.test_templates_endpoint),
             ("Content Generation", lambda: self.test_content_generation()[0]),
             ("Image Generation", self.test_image_generation),
+            ("Stripe Checkout", self.test_stripe_checkout),
             ("User Preferences", self.test_user_preferences),
             ("Drafts Functionality", self.test_drafts_functionality),
         ]
