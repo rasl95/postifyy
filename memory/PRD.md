@@ -8,48 +8,28 @@ Import from GitHub https://github.com/rasl95/Postify-ai.git — AI content gener
 - **Frontend:** React 19, TailwindCSS, Shadcn/UI, lucide-react, craco build
 - **Theme:** Dark (#0B0B0D), brand red (#FF3B30)
 - **Languages:** Russian (primary), English
-- **AI:** Emergent LLM key → OpenAI GPT-4o-mini (text generation)
+- **AI Text:** Emergent LLM key → OpenAI GPT-4o-mini
+- **AI Images:** Direct OpenAI API → gpt-image-1
+- **Payments:** Stripe (live keys) — Pro: price_1Sx2kHIwguN5vJftHSX5lzVm, Business: price_1Sx2l5IwguN5vJftaqwXCzed
 
-## DB Collections
-users, generations, campaigns, analytics_events, share_events, user_templates, scheduled_posts, referrals, subscriptions, brand_profiles, user_preferences, drafts, image_generations, user_sessions, favorites
+## What's Been Implemented
+- **Feb 8, 2026:** Imported from GitHub, configured real API keys, fixed bugs
+- Full SaaS: auth, content gen, image gen, campaigns, scheduler, analytics, referrals, Stripe billing
+- 14+ pages/routes, onboarding flow, brand profiles, favorites, history, templates
 
-## Key API Endpoints
-- Auth: `/api/auth/{register, login, me, google/session, logout}`
-- Content: `/api/generate`, `/api/generate-image`, `/api/templates`
-- Campaigns: `/api/campaigns/{config, strategy, generate}`
-- Scheduler: `/api/scheduler/{posts, ai-suggest, stats}`
-- Analytics: `/api/analytics/{overview, performance, recommendations}`
-- Referrals: `/api/referrals/{stats}`, `/api/referrals/check/{code}`
-- Stripe: `/api/stripe/{create-checkout-session, webhook}`
-- User: `/api/user/preferences`, `/api/user/complete-onboarding`, `/api/drafts`
+## Bugs Fixed
+1. `NameError: 'size'` in `/api/generate-image` mock mode → changed to `final_size`
+2. OpenAI client not initialized when Emergent LLM key present → separated text (Emergent) and image (OpenAI) client initialization
 
-## What's Been Implemented (Imported from GitHub)
-- **Date:** Feb 8, 2026
-- Full SaaS with auth (JWT + Google OAuth), content generation, image generation, marketing campaigns, scheduler, analytics, referrals, Stripe billing
-- Onboarding flow, brand profiles, favorites, history, templates
-- Landing page, dashboard, 14+ pages/routes
-
-## Bug Fixed During Import
-- Fixed `NameError: name 'size' is not defined` in `/api/generate-image` mock mode (line 1579: `size` → `final_size`)
-
-## 3rd Party Integrations
-- **Emergent LLM key** → OpenAI GPT-4o-mini (text generation) - WORKING
-- **Stripe** (test mode: sk_test_emergent) - configured
-- **Google OAuth** via Emergent Auth - configured (optional)
-- **Image generation** - currently returns mock images (openai_client is None when using Emergent LLM key)
-
-## Test Results
-- Backend: 90%+ endpoints working (auth, templates, generate, preferences, drafts, image-gen)
-- Frontend: Landing, auth, dashboard, navigation all functional
-- Report: `/app/test_reports/iteration_1.json`
+## Test Results (iteration_2)
+- Backend: 91% — all endpoints working (image gen takes ~21s, not a bug)
+- Frontend: 100% — landing, auth, dashboard, navigation all working
+- Overall: **97% functional**
 
 ## Backlog
-### P0 (Next Steps - User Requested)
-- Continue development (user will specify features)
-
 ### P1
-- Real image generation (needs direct OpenAI API key or GPT Image 1 via Emergent)
 - Weekly AI Reports, Dynamic AI Recommendations
+- Google OAuth keys (optional, can be added later)
 
 ### P2
 - Backend refactoring (modular routers)
@@ -57,4 +37,3 @@ users, generations, campaigns, analytics_events, share_events, user_templates, s
 
 ---
 *Last updated: February 8, 2026*
-*Status: Imported and Running*
