@@ -61,11 +61,20 @@ logger.info(f"Mock generation mode: {MOCK_GENERATION}")
 emergent_llm_key = os.environ.get('EMERGENT_LLM_KEY', '')
 openai_api_key = os.environ.get('OPENAI_API_KEY', '')
 
-# Prefer Emergent LLM key, fallback to direct OpenAI key
+# Prefer Emergent LLM key for text, but also init OpenAI client for image generation
 if emergent_llm_key and emergent_llm_key.strip():
     use_emergent_llm = True
-    logger.info("Using Emergent LLM key for AI generation (GPT-4o-mini)")
-    openai_client = None  # Not used with emergent
+    logger.info("Using Emergent LLM key for AI text generation (GPT-4o-mini)")
+    # Still initialize OpenAI client for image generation if key is available
+    if openai_api_key and openai_api_key.strip() and not openai_api_key.startswith('sk-emergent'):
+        try:
+            openai_client = OpenAI(api_key=openai_api_key)
+            logger.info("OpenAI client initialized for image generation (gpt-image-1)")
+        except Exception as e:
+            logger.error(f"Failed to initialize OpenAI client for images: {e}")
+            openai_client = None
+    else:
+        openai_client = None
 elif openai_api_key and openai_api_key.strip() and not openai_api_key.startswith('sk-emergent'):
     use_emergent_llm = False
     try:
