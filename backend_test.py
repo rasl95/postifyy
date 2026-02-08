@@ -40,14 +40,17 @@ class PostifyAPITester:
         print(f"   Method: {method}")
         
         try:
+            # Use longer timeout for potentially slow endpoints
+            timeout = 30 if 'image' in endpoint or 'stripe' in endpoint else 10
+            
             if method == 'GET':
-                response = requests.get(url, headers=request_headers, timeout=10)
+                response = requests.get(url, headers=request_headers, timeout=timeout)
             elif method == 'POST':
-                response = requests.post(url, json=data, headers=request_headers, timeout=10)
+                response = requests.post(url, json=data, headers=request_headers, timeout=timeout)
             elif method == 'PUT':
-                response = requests.put(url, json=data, headers=request_headers, timeout=10)
+                response = requests.put(url, json=data, headers=request_headers, timeout=timeout)
             elif method == 'DELETE':
-                response = requests.delete(url, headers=request_headers, timeout=10)
+                response = requests.delete(url, headers=request_headers, timeout=timeout)
 
             success = response.status_code == expected_status
             
