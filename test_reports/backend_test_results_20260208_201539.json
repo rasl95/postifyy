@@ -1,0 +1,86 @@
+{
+  "timestamp": "2026-02-08T20:15:39.485368",
+  "base_url": "https://postify-ai-4.preview.emergentagent.com",
+  "tests_run": 11,
+  "tests_passed": 10,
+  "success_rate": "90.9%",
+  "results": [
+    {
+      "test": "User Registration",
+      "status": "PASSED",
+      "expected_status": 201,
+      "actual_status": 201,
+      "response_preview": "{'access_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RfNmE3MTY2NDRAZXhhbXBsZS5jb20iLCJleHAiOjE3NzA2NjgxMTd9.9tbr2ZCwdFiYf_j7kFo6C7znn4Tvqx5cS6qNbUB2mAA', 'token_type': 'bearer', 'u..."
+    },
+    {
+      "test": "User Login",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'access_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RfNmE3MTY2NDRAZXhhbXBsZS5jb20iLCJleHAiOjE3NzA2NjgxMTd9.9tbr2ZCwdFiYf_j7kFo6C7znn4Tvqx5cS6qNbUB2mAA', 'token_type': 'bearer', 'u..."
+    },
+    {
+      "test": "Get User Profile (/auth/me)",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'email': 'test_6a716644@example.com', 'full_name': 'Test User', 'subscription_plan': 'free', 'monthly_limit': 3, 'current_usage': 0, 'stripe_customer_id': 'cus_TwXSzNMJeYdhj9', 'onboarding_completed'..."
+    },
+    {
+      "test": "Get Templates",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'templates': {'social_post': [{'id': 'product_promo', 'name': {'en': 'Product Promotion', 'ru': '\u041f\u0440\u043e\u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0435 \u043f\u0440\u043e\u0434\u0443\u043a\u0442\u0430'}, 'icon': '\ud83d\udecd\ufe0f', 'tone': 'selling', 'goal': 'sales', 'structure': 'Hook \u2192 Benefit..."
+    },
+    {
+      "test": "Generate Social Post",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'id': 'da81eb12-2eb5-405c-a083-8d50b66f2c96', 'generation_id': 'da81eb12-2eb5-405c-a083-8d50b66f2c96', 'content': 'Unlock your creativity with Postify AI! \ud83d\ude80\u2728 Discover the power of AI-driven content g..."
+    },
+    {
+      "test": "Generate AI Image",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'id': '8b9b8adb-ec1c-471d-ba2a-f7a81e3c85d1', 'image_url': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABAAAAAQACAIAAADwf7zUAAGAhGNhQlgAAYCEanVtYgAAAB5qdW1kYzJwYQARABCAAACqADibcQNjMnBhAAAANvBqdW1iA..."
+    },
+    {
+      "test": "Create Stripe Checkout Session",
+      "status": "FAILED",
+      "expected_status": 200,
+      "actual_status": 404,
+      "error": "{\"detail\":\"Not Found\"}"
+    },
+    {
+      "test": "Save User Preferences",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'message': 'Preferences saved successfully', 'preferences': {'user_email': 'test_6a716644@example.com', 'content_goals': ['social_posts', 'ai_images'], 'platforms': ['instagram', 'tiktok'], 'business..."
+    },
+    {
+      "test": "Get User Preferences",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'preferences': {'user_email': 'test_6a716644@example.com', 'business_niche': 'marketing', 'content_goals': ['social_posts', 'ai_images'], 'platforms': ['instagram', 'tiktok'], 'preferred_tone': 'neut..."
+    },
+    {
+      "test": "Save Draft",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'saved': True, 'updated_at': '2026-02-08T20:15:39.436444+00:00'}"
+    },
+    {
+      "test": "Get Draft",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'draft': {'draft_type': 'content', 'user_email': 'test_6a716644@example.com', 'draft_data': {'content_type': 'social_post', 'topic': 'Test draft topic', 'tone': 'neutral'}, 'updated_at': '2026-02-08T..."
+    }
+  ]
+}
