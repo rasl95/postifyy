@@ -214,17 +214,17 @@ const HistoryCard = ({
       </div>
 
       {/* Meta footer */}
-      <div className="px-4 sm:px-5 pb-3.5 sm:pb-4 flex items-center gap-2 text-xs text-gray-600">
+      <div className="px-4 sm:px-5 pb-3.5 sm:pb-4 flex items-center gap-2 text-xs text-gray-500">
         <span>{language === 'ru' ? 'Создано' : 'Created'} {formatShortDate(item.created_at)}</span>
         {item.tone && item.tone !== 'neutral' && (
           <>
-            <span className="text-gray-700">·</span>
+            <span className="text-gray-600">·</span>
             <span className="capitalize">{item.tone}</span>
           </>
         )}
         {item.platform && (
           <>
-            <span className="text-gray-700">·</span>
+            <span className="text-gray-600">·</span>
             <span className="capitalize">{item.platform}</span>
           </>
         )}
