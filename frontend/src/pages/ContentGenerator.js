@@ -24,8 +24,10 @@ import { QuickActions } from '../components/QuickActions';
 import { useAnalytics } from '../hooks/useAnalytics';
 import { useShare } from '../hooks/useShare';
 import { useAutosave, AutosaveIndicator } from '../hooks/useAutosave';
+import { ShareFirstPostModal } from '../components/ShareFirstPostModal';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
+const FIRST_SHARE_SHOWN_KEY = 'postify_first_share_shown';
 
 export const ContentGenerator = () => {
   const { token, checkAuth, user } = useAuth();
