@@ -541,225 +541,230 @@ export const MarketingCampaigns = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="space-y-6"
+          className="space-y-5"
         >
-          {/* Back button and campaign header */}
-          <div className="flex items-center gap-4">
-            <Button 
-              variant="ghost" 
+          {/* Back + campaign name */}
+          <div>
+            <button 
               onClick={() => setSelectedCampaign(null)}
-              className="text-gray-400"
+              className="text-sm text-gray-500 hover:text-white transition-colors mb-3 flex items-center gap-1"
             >
-              ← {language === 'ru' ? 'Назад' : 'Back'}
-            </Button>
-            <div className="flex-1">
-              <h2 className="text-xl font-semibold text-white">{selectedCampaign.name}</h2>
-              <div className="flex items-center gap-3 text-sm text-gray-400 mt-1">
-                <span>{selectedCampaign.duration_days} {t.days}</span>
-                <span>•</span>
-                <span>{selectedCampaign.total_posts} {t.posts}</span>
-                <span>•</span>
-                <Badge variant={selectedCampaign.status === 'ready' ? 'default' : 'secondary'}>
-                  {selectedCampaign.status === 'ready' ? t.ready : t.draft}
-                </Badge>
+              ← {language === 'ru' ? 'Все кампании' : 'All campaigns'}
+            </button>
+            <div className="flex items-start justify-between">
+              <div>
+                <h2 className="text-xl font-semibold text-white">{selectedCampaign.name}</h2>
+                <p className="text-sm text-gray-500 mt-0.5">
+                  {selectedCampaign.duration_days} {t.days} · {selectedCampaign.total_posts} {t.posts}
+                  {selectedCampaign.status === 'ready' && (
+                    <span className="text-emerald-400 ml-2">· {t.ready}</span>
+                  )}
+                </p>
+              </div>
+              <div className="flex gap-1.5">
+                <button onClick={openShareModal} className="p-2 rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition-colors" data-testid="share-campaign-btn">
+                  <Share2 className="w-4 h-4" />
+                </button>
+                <button onClick={() => duplicateCampaign(selectedCampaign.id)} className="p-2 rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition-colors">
+                  <Copy className="w-4 h-4" />
+                </button>
+                <button onClick={() => deleteCampaign(selectedCampaign.id)} className="p-2 rounded-lg text-gray-500 hover:text-red-400 hover:bg-white/5 transition-colors">
+                  <Trash2 className="w-4 h-4" />
+                </button>
               </div>
             </div>
-            <div className="flex gap-2">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                onClick={openShareModal}
-                data-testid="share-campaign-btn"
-              >
-                <Share2 className="w-4 h-4 mr-1" /> {t.share}
-              </Button>
-              <Button variant="outline" size="sm" onClick={() => duplicateCampaign(selectedCampaign.id)}>
-                <Copy className="w-4 h-4 mr-1" /> {t.duplicate}
-              </Button>
-              <Button variant="outline" size="sm" className="text-red-400 hover:text-red-300" onClick={() => deleteCampaign(selectedCampaign.id)}>
-                <Trash2 className="w-4 h-4" />
-              </Button>
-            </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Main Content - Posts */}
-            <div className="lg:col-span-2 space-y-4">
-              {/* Strategy Summary */}
-              <Card className="bg-white/5 border-white/10">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Sparkles className="w-5 h-5 text-[#FF3B30]" />
-                    {t.strategySummary}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <span className="text-gray-400">{t.recommendedFrequency}:</span>
-                      <p className="text-white font-medium">{selectedCampaign.posting_frequency}</p>
-                    </div>
-                    <div>
-                      <span className="text-gray-400">{t.platforms}:</span>
-                      <div className="flex gap-2 mt-1">
-                        {selectedCampaign.platforms?.map(p => {
-                          const Icon = platformIcons[p] || MessageCircle;
-                          return <Icon key={p} className="w-5 h-5 text-white" />;
-                        })}
-                      </div>
-                    </div>
+          {/* Strategy + CTA merged into one section */}
+          {(selectedCampaign.status === 'draft' || !selectedCampaign.posts?.length) ? (
+            <div className="space-y-5">
+              {/* Strategy info — no card wrapper, just content */}
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 text-sm text-gray-400">
+                    <Clock className="w-3.5 h-3.5" />
+                    <span>{selectedCampaign.posting_frequency}</span>
                   </div>
-                  <PillarDistribution contentMix={selectedCampaign.content_mix} />
-                </CardContent>
-              </Card>
+                  <div className="flex gap-1.5 ml-auto">
+                    {selectedCampaign.platforms?.map(p => {
+                      const Icon = platformIcons[p] || MessageCircle;
+                      return <Icon key={p} className="w-4 h-4 text-gray-400" />;
+                    })}
+                  </div>
+                </div>
 
-              {/* Generate or Posts List */}
-              {selectedCampaign.status === 'draft' || !selectedCampaign.posts?.length ? (
-                <Card className="bg-white/5 border-white/10 border-dashed">
-                  <CardContent className="py-12 text-center">
-                    <Sparkles className="w-12 h-12 mx-auto mb-4 text-[#FF3B30]" />
-                    <h3 className="text-lg font-medium text-white mb-2">
-                      {language === 'ru' ? 'Готовы к генерации?' : 'Ready to generate?'}
-                    </h3>
-                    <p className="text-gray-400 mb-6 max-w-md mx-auto">
-                      {language === 'ru' 
-                        ? `AI создаст ${selectedCampaign.total_posts} постов на основе вашей стратегии`
-                        : `AI will create ${selectedCampaign.total_posts} posts based on your strategy`}
-                    </p>
-                    <Button 
-                      size="lg"
-                      className="bg-[#FF3B30] hover:bg-[#FF4D42]"
-                      onClick={() => generateCampaignContent(selectedCampaign.id)}
-                      disabled={generating}
-                      data-testid="generate-campaign-btn"
-                    >
-                      {generating ? (
-                        <>
-                          <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                          {t.generating}
-                        </>
-                      ) : (
-                        <>
-                          <Play className="w-5 h-5 mr-2" />
-                          {t.generateContent}
-                        </>
-                      )}
-                    </Button>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="space-y-3">
-                  {selectedCampaign.posts.map((post, index) => {
-                    const PillarIcon = pillarIcons[post.pillar] || BookOpen;
-                    const PlatformIcon = platformIcons[post.platform] || MessageCircle;
-                    const isExpanded = expandedPosts[index];
-                    
-                    return (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                      >
-                        <Card className="bg-white/5 border-white/10 hover:border-white/20 transition-colors">
-                          <CardContent className="p-4">
-                            {/* Post Header */}
-                            <div className="flex items-center gap-3 mb-3">
-                              <div 
-                                className="w-10 h-10 rounded-xl flex items-center justify-center"
-                                style={{ backgroundColor: `${post.pillar_info.color}20` }}
-                              >
-                                <PillarIcon className="w-5 h-5" style={{ color: post.pillar_info.color }} />
-                              </div>
-                              <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                  <span className="text-white font-medium">
-                                    {t.postDay} {post.scheduled_day}
-                                  </span>
-                                  <Badge 
-                                    variant="outline" 
-                                    className="text-xs"
-                                    style={{ borderColor: post.pillar_info.color, color: post.pillar_info.color }}
-                                  >
-                                    {language === 'ru' ? post.pillar_info.name_ru : post.pillar_info.name}
-                                  </Badge>
-                                </div>
-                                <div className="flex items-center gap-2 text-xs text-gray-500">
-                                  <PlatformIcon className="w-3 h-3" />
-                                  <span className="capitalize">{post.platform}</span>
-                                  <span>•</span>
-                                  <span className="capitalize">{post.tone}</span>
-                                  {post.has_cta && (
-                                    <>
-                                      <span>•</span>
-                                      <span className="text-[#FF3B30]">CTA</span>
-                                    </>
-                                  )}
-                                </div>
-                              </div>
-                              <Button 
-                                variant="ghost" 
-                                size="sm"
-                                onClick={() => togglePostExpand(index)}
-                              >
-                                {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
-                              </Button>
-                            </div>
-                            
-                            {/* Post Content */}
-                            <div className={`text-gray-300 text-sm whitespace-pre-line ${isExpanded ? '' : 'line-clamp-3'}`}>
-                              {post.content}
-                            </div>
-                            
-                            {/* Post Actions */}
-                            <AnimatePresence>
-                              {isExpanded && (
-                                <motion.div
-                                  initial={{ opacity: 0, height: 0 }}
-                                  animate={{ opacity: 1, height: 'auto' }}
-                                  exit={{ opacity: 0, height: 0 }}
-                                  className="flex items-center gap-2 mt-4 pt-4 border-t border-white/10"
-                                >
-                                  <Button variant="outline" size="sm" onClick={() => copyPost(post.content)}>
-                                    <Copy className="w-3 h-3 mr-1" /> Copy
-                                  </Button>
-                                  <Button variant="outline" size="sm" onClick={() => regeneratePost(selectedCampaign.id, index, false)}>
-                                    <RefreshCw className="w-3 h-3 mr-1" /> {t.regenerate}
-                                  </Button>
-                                  <Button variant="outline" size="sm" onClick={() => regeneratePost(selectedCampaign.id, index, true)}>
-                                    <Edit2 className="w-3 h-3 mr-1" /> {t.regenerateCTA}
-                                  </Button>
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
-                          </CardContent>
-                        </Card>
-                      </motion.div>
-                    );
+                {/* Content mix — compact inline */}
+                {selectedCampaign.content_mix?.length > 0 && (
+                  <div className="flex flex-wrap gap-x-4 gap-y-1.5">
+                    {selectedCampaign.content_mix.map((item, i) => {
+                      const PIcon = pillarIcons[item.pillar];
+                      return (
+                        <span key={i} className="inline-flex items-center gap-1.5 text-sm text-gray-400">
+                          <span className="w-1.5 h-1.5 rounded-full" style={{ background: item.pillar_info.color }} />
+                          {language === 'ru' ? item.pillar_info.name_ru : item.pillar_info.name}
+                          <span className="text-gray-600">{item.count}</span>
+                        </span>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
+              {/* Generate CTA — full width, no card */}
+              <div className="pt-2">
+                <Button 
+                  className="w-full bg-[#FF3B30] hover:bg-[#FF4D42] h-14 text-base font-semibold shadow-lg shadow-[#FF3B30]/20"
+                  onClick={() => generateCampaignContent(selectedCampaign.id)}
+                  disabled={generating}
+                  data-testid="generate-campaign-btn"
+                >
+                  {generating ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      {t.generating}
+                    </>
+                  ) : (
+                    <>
+                      <Play className="w-5 h-5 mr-2" />
+                      {t.generateContent}
+                    </>
+                  )}
+                </Button>
+                <p className="text-xs text-gray-600 text-center mt-2.5">
+                  {language === 'ru' 
+                    ? `AI создаст ${selectedCampaign.total_posts} постов на основе стратегии`
+                    : `AI will create ${selectedCampaign.total_posts} posts based on strategy`}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* Strategy summary — compact for ready campaigns */}
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex items-center gap-2 text-sm text-gray-400">
+                  <Clock className="w-3.5 h-3.5" />
+                  <span>{selectedCampaign.posting_frequency}</span>
+                </div>
+                {selectedCampaign.content_mix?.map((item, i) => (
+                  <span key={i} className="inline-flex items-center gap-1.5 text-sm text-gray-500">
+                    <span className="w-1.5 h-1.5 rounded-full" style={{ background: item.pillar_info.color }} />
+                    {language === 'ru' ? item.pillar_info.name_ru : item.pillar_info.name} {item.count}
+                  </span>
+                ))}
+                <div className="flex gap-1.5 ml-auto">
+                  {selectedCampaign.platforms?.map(p => {
+                    const Icon = platformIcons[p] || MessageCircle;
+                    return <Icon key={p} className="w-4 h-4 text-gray-500" />;
                   })}
                 </div>
-              )}
-            </div>
+              </div>
 
-            {/* Sidebar - Quality Score */}
-            <div className="space-y-4">
-              <QualityScoreCard score={selectedCampaign.quality_score} />
-              
-              {/* Quick Stats */}
-              <Card className="bg-white/5 border-white/10">
-                <CardContent className="p-4 grid grid-cols-2 gap-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-white">{selectedCampaign.posts?.length || 0}</div>
-                    <div className="text-xs text-gray-500">{t.posts}</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-white">{selectedCampaign.duration_days}</div>
-                    <div className="text-xs text-gray-500">{t.days}</div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
+              {/* Quality score — inline compact */}
+              {selectedCampaign.quality_score && (
+                <div className="flex items-center gap-3 py-3">
+                  <BarChart3 className="w-4 h-4 text-[#FF3B30]" />
+                  <span className="text-sm text-gray-400">{t.qualityScore}</span>
+                  <span className="text-lg font-bold text-white">{selectedCampaign.quality_score.score}/100</span>
+                  {selectedCampaign.quality_score.tips?.length > 0 && (
+                    <span className="text-xs text-gray-600 ml-auto">
+                      {selectedCampaign.quality_score.tips[0]}
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* Posts list */}
+              <div className="space-y-2.5">
+                {selectedCampaign.posts.map((post, index) => {
+                  const PillarIcon = pillarIcons[post.pillar] || BookOpen;
+                  const PlatformIcon = platformIcons[post.platform] || MessageCircle;
+                  const isExpanded = expandedPosts[index];
+                  
+                  return (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.03 }}
+                      className="bg-[#111113] border border-white/[0.06] rounded-xl p-4"
+                    >
+                      {/* Post Header */}
+                      <div 
+                        className="flex items-center gap-3 cursor-pointer"
+                        onClick={() => togglePostExpand(index)}
+                      >
+                        <div 
+                          className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+                          style={{ backgroundColor: `${post.pillar_info.color}15` }}
+                        >
+                          <PillarIcon className="w-4 h-4" style={{ color: post.pillar_info.color }} />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm font-medium text-white">
+                              {t.postDay} {post.scheduled_day}
+                            </span>
+                            <span className="text-xs text-gray-600">·</span>
+                            <span className="text-xs capitalize" style={{ color: post.pillar_info.color }}>
+                              {language === 'ru' ? post.pillar_info.name_ru : post.pillar_info.name}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                            <PlatformIcon className="w-3 h-3" />
+                            <span className="capitalize">{post.platform}</span>
+                            {post.has_cta && <span className="text-[#FF3B30]">· CTA</span>}
+                          </div>
+                        </div>
+                        <ChevronRight className={`w-4 h-4 text-gray-600 transition-transform ${isExpanded ? 'rotate-90' : ''}`} />
+                      </div>
+                      
+                      {/* Post Content — collapsed preview */}
+                      {!isExpanded && (
+                        <p className="text-sm text-gray-500 line-clamp-2 mt-2.5 ml-12">
+                          {post.content}
+                        </p>
+                      )}
+
+                      {/* Expanded content + actions */}
+                      <AnimatePresence>
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: 'auto' }}
+                            exit={{ opacity: 0, height: 0 }}
+                          >
+                            <div className="text-sm text-gray-300 whitespace-pre-line mt-3 leading-relaxed">
+                              {post.content}
+                            </div>
+                            <div className="flex items-center gap-2 mt-4 pt-3 border-t border-white/[0.04]">
+                              <button 
+                                className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-white px-2.5 py-1.5 rounded-lg hover:bg-white/5 transition-colors"
+                                onClick={() => copyPost(post.content)}
+                              >
+                                <Copy className="w-3 h-3" /> Copy
+                              </button>
+                              <button 
+                                className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-white px-2.5 py-1.5 rounded-lg hover:bg-white/5 transition-colors"
+                                onClick={() => regeneratePost(selectedCampaign.id, index, false)}
+                              >
+                                <RefreshCw className="w-3 h-3" /> {t.regenerate}
+                              </button>
+                              <button 
+                                className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-white px-2.5 py-1.5 rounded-lg hover:bg-white/5 transition-colors"
+                                onClick={() => regeneratePost(selectedCampaign.id, index, true)}
+                              >
+                                <Edit2 className="w-3 h-3" /> CTA
+                              </button>
+                            </div>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </>
+          )}
         </motion.div>
       ) : (
         // Campaign List
