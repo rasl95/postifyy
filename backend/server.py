@@ -3242,6 +3242,83 @@ async def track_analytics_event(
     
     return {"tracked": True}
 
+# ============= SHARE FIRST POST =============
+
+SHARE_BONUS_CREDITS = 3
+
+class ShareFirstPostRequest(BaseModel):
+    platform: str
+    generation_id: Optional[str] = None
+    content_preview: Optional[str] = None
+
+@api_router.post("/share/first-post")
+async def share_first_post(
+    req: ShareFirstPostRequest,
+    current_user: dict = Depends(get_current_user)
+):
+    """Track first-post share and grant +3 bonus credits (one-time per user)."""
+    user_email = current_user["email"]
+    
+    # Check if bonus already claimed
+    already_claimed = await db.share_events.find_one({
+        "user_email": user_email,
+        "event_type": "first_post_share",
+        "bonus_granted": True
+    })
+    
+    bonus_granted = False
+    bonus_amount = 0
+    
+    if not already_claimed:
+        # Grant bonus credits
+        await db.users.update_one(
+            {"email": user_email},
+            {"$inc": {"bonus_credits": SHARE_BONUS_CREDITS}}
+        )
+        bonus_granted = True
+        bonus_amount = SHARE_BONUS_CREDITS
+        logger.info(f"Share bonus: +{SHARE_BONUS_CREDITS} credits to {user_email}")
+    
+    # Always record share event
+    share_doc = {
+        "id": str(uuid.uuid4()),
+        "user_email": user_email,
+        "event_type": "first_post_share",
+        "platform": req.platform,
+        "generation_id": req.generation_id,
+        "content_preview": (req.content_preview or "")[:200],
+        "referral_code": current_user.get("referral_code", ""),
+        "bonus_granted": bonus_granted,
+        "bonus_amount": bonus_amount,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    await db.share_events.insert_one(share_doc)
+    
+    # Get updated user stats
+    updated_user = await db.users.find_one({"email": user_email}, {"_id": 0, "bonus_credits": 1, "current_usage": 1, "monthly_limit": 1})
+    
+    return {
+        "shared": True,
+        "bonus_granted": bonus_granted,
+        "bonus_amount": bonus_amount,
+        "total_bonus_credits": updated_user.get("bonus_credits", 0),
+        "message": f"+{SHARE_BONUS_CREDITS} bonus credits!" if bonus_granted else "Shared successfully"
+    }
+
+@api_router.get("/share/first-post/status")
+async def get_first_post_share_status(current_user: dict = Depends(get_current_user)):
+    """Check if user has already shared their first post."""
+    share = await db.share_events.find_one({
+        "user_email": current_user["email"],
+        "event_type": "first_post_share"
+    }, {"_id": 0, "platform": 1, "bonus_granted": 1, "bonus_amount": 1, "created_at": 1})
+    
+    return {
+        "has_shared": share is not None,
+        "bonus_claimed": share.get("bonus_granted", False) if share else False,
+        "share_details": share
+    }
+
 @api_router.get("/analytics/summary")
 async def get_analytics_summary(current_user: dict = Depends(get_current_user)):
     """Get user's analytics summary"""
