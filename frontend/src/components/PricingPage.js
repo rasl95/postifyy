@@ -304,10 +304,10 @@ export const PricingPage = () => {
         </Card>
 
         {/* Business Plan */}
-        <Card className="bg-[#111113] border-white/10 relative">
+        <Card className="bg-[#111113] border-white/5 relative opacity-90">
           <CardHeader className="pb-2">
-            <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center mb-4">
-              <Crown className="w-6 h-6 text-purple-400" />
+            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-4">
+              <Crown className="w-6 h-6 text-gray-500" />
             </div>
             <CardTitle className="text-white text-xl">{plans.business.name[language]}</CardTitle>
             <p className="text-gray-500 text-sm">
