@@ -251,7 +251,7 @@ Try applying at least one of these today.
   return (
     <div className="min-h-[100svh] bg-[#0B0B0D] overflow-x-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       {/* NAV */}
-      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#0B0B0D]/80 border-b border-white/5">
+      <nav className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#0B0B0D]/80 border-b border-white/5" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
         <div className="max-w-7xl mx-auto px-6 lg:px-12 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#FF3B30] to-[#FF6A3D] flex items-center justify-center">
