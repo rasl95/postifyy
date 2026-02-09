@@ -100,7 +100,7 @@ export const DashboardLayout = () => {
       />
 
       {/* Mobile Header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 h-16 bg-[#111113]/95 backdrop-blur-lg border-b border-white/10 z-40 flex items-center justify-between px-4" style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
+      <div className="md:hidden fixed top-0 left-0 right-0 bg-[#111113]/95 backdrop-blur-lg border-b border-white/10 z-40 flex items-center justify-between px-4 h-16" style={{ paddingTop: 'env(safe-area-inset-top, 0px)', boxSizing: 'content-box' }}>
         <div className="flex items-center space-x-2">
           <Sparkles className="w-6 h-6 text-[#FF3B30]" />
           <span className="text-xl font-bold text-white" style={{ fontFamily: 'Manrope, sans-serif' }}>
