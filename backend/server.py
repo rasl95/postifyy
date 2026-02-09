@@ -4065,12 +4065,28 @@ Generate fresh content with:
     if MOCK_GENERATION:
         new_content = f"[REGENERATED] {original_post['pillar'].upper()} post\n\n{prompt[:100]}...\n\n#regenerated"
     elif use_emergent_llm:
-        chat = LlmChat(
-            api_key=emergent_llm_key,
-            session_id=f"regen_{request.campaign_id}_{request.post_index}",
-            system_message=system_prompt
-        ).with_model("openai", "gpt-4o-mini")
-        new_content = await chat.send_message(UserMessage(text=prompt))
+        try:
+            chat = LlmChat(
+                api_key=emergent_llm_key,
+                session_id=f"regen_{request.campaign_id}_{request.post_index}",
+                system_message=system_prompt
+            ).with_model("openai", "gpt-4o-mini")
+            new_content = await chat.send_message(UserMessage(text=prompt))
+        except Exception as emergent_err:
+            logger.warning(f"Emergent LLM regen failed: {emergent_err}, fallback to OpenAI")
+            if openai_client:
+                response = openai_client.chat.completions.create(
+                    model="gpt-4o-mini",
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": prompt}
+                    ],
+                    max_tokens=500,
+                    temperature=0.9
+                )
+                new_content = response.choices[0].message.content
+            else:
+                raise emergent_err
     else:
         response = openai_client.chat.completions.create(
             model="gpt-4o-mini",
