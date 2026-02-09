@@ -33,34 +33,39 @@ export const GenerationProgress = ({
   // Reset state when loading changes
   useEffect(() => {
     if (!isLoading) {
+      setCurrentStage(0);
+      setProgress(0);
       return;
     }
 
-    // Reset values
-    let stageIndex = 0;
-    let progressValue = 0;
     setCurrentStage(0);
     setProgress(0);
-    
+
+    // Build stage boundaries as cumulative percentages
     const totalDuration = filteredStages.reduce((sum, s) => sum + s.duration, 0);
-    
+    const stageBoundaries = [];
+    let cumulative = 0;
+    for (const s of filteredStages) {
+      cumulative += s.duration;
+      stageBoundaries.push((cumulative / totalDuration) * 100);
+    }
+
+    let progressValue = 0;
+    const tickMs = 80;
+    const increment = 95 / (totalDuration / tickMs);
+
     const interval = setInterval(() => {
-      progressValue += 2;
-      setProgress(Math.min(progressValue, 95));
-      
-      // Calculate which stage we should be at
-      let elapsed = 0;
-      for (let i = 0; i < filteredStages.length; i++) {
-        elapsed += filteredStages[i].duration;
-        if ((progressValue / 100) * totalDuration <= elapsed) {
-          if (stageIndex !== i) {
-            stageIndex = i;
-            setCurrentStage(i);
-          }
+      progressValue = Math.min(progressValue + increment, 95);
+      setProgress(progressValue);
+
+      // Find current stage based on progress vs boundaries
+      for (let i = 0; i < stageBoundaries.length; i++) {
+        if (progressValue < stageBoundaries[i]) {
+          setCurrentStage(i);
           break;
         }
       }
-    }, totalDuration / 50);
+    }, tickMs);
 
     return () => clearInterval(interval);
   }, [isLoading, filteredStages]);
