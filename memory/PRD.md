@@ -84,6 +84,15 @@ Import from GitHub https://github.com/rasl95/Postify-ai.git — AI content gener
 - Tabs for detailed views (Overview charts, AI Director, Recommendations, Weekly)
 - Files: Analytics.js (full rewrite)
 
+### Brand Settings Wizard Redesign (Feb 9)
+- Replaced monolithic form with 3-step wizard: Identity → Audience → Visual style
+- Step 1: Brand name, tagline, business type as icon-based cards (lucide icons)
+- Step 2: Target audience textarea, brand mood pills (select up to 3)
+- Step 3: Image styles grid with descriptions, brand color pickers (optional)
+- Live preview sidebar showing mock social post with brand colors/name/tagline
+- Progress indicator with checkmarks for completed steps
+- Files: BrandSettings.js (full rewrite)
+
 ## Backlog
 ### P1: Google OAuth, Email drip, A/B testing
 ### P2: Backend modularization (LLM fallback dedup), Platform publishing
