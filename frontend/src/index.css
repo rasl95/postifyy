@@ -177,7 +177,8 @@ code {
 
 .dark input::placeholder,
 .dark textarea::placeholder {
-    color: var(--postify-text-subtle) !important;
+    color: rgba(255, 255, 255, 0.4) !important;
+    font-weight: 400;
 }
 
 .dark input:focus,
