@@ -385,6 +385,16 @@ export const ContentGenerator = () => {
       };
       toast.success(successMessages[activeTab]);
       await checkAuth();
+      
+      // Show "Share your first post" modal for first-time generation
+      const wasUsage = user?.current_usage || 0;
+      const firstShareShown = sessionStorage.getItem(FIRST_SHARE_SHOWN_KEY);
+      if (wasUsage <= 1 && !firstShareShown) {
+        setTimeout(() => {
+          setShowShareFirstPost(true);
+          sessionStorage.setItem(FIRST_SHARE_SHOWN_KEY, 'true');
+        }, 1500);
+      }
     } catch (error) {
       trackGeneration(activeTab, false, { error: error.response?.data?.detail });
       if (error.response?.status === 403) {
