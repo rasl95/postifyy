@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Loader2, Sparkles, Wand2, Palette, Check, Zap } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Zap, Wand2, Sparkles, Check, Palette, Loader2 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 const GENERATION_STAGES = {
@@ -19,7 +19,7 @@ const GENERATION_STAGES = {
 
 export const GenerationProgress = ({ 
   isLoading, 
-  type = 'content', // 'content' | 'image'
+  type = 'content',
   showBrandStep = false,
   onCancel 
 }) => {
@@ -27,99 +27,88 @@ export const GenerationProgress = ({
   const [currentStage, setCurrentStage] = useState(0);
   const [progress, setProgress] = useState(0);
   const [visible, setVisible] = useState(false);
-  const [apiDone, setApiDone] = useState(false);
+  const apiDoneRef = useRef(false);
+  const intervalRef = useRef(null);
 
   const stages = GENERATION_STAGES[type] || GENERATION_STAGES.content;
   const filteredStages = showBrandStep ? stages : stages.filter(s => s.id !== 'brand');
-  const totalStages = filteredStages.length;
 
   useEffect(() => {
     if (isLoading) {
-      // Start showing
+      // Start animation
+      apiDoneRef.current = false;
       setVisible(true);
-      setApiDone(false);
       setCurrentStage(0);
       setProgress(0);
-    } else if (visible) {
-      // API is done but keep animating until all stages shown
-      setApiDone(true);
-    }
-  }, [isLoading, visible]);
 
-  // Stage progression timer
-  useEffect(() => {
-    if (!visible) return;
+      const totalStages = filteredStages.length;
+      const stagePercent = 95 / totalStages;
+      let stageIdx = 0;
+      let prog = 0;
+      const tickMs = 50;
+      const totalDuration = filteredStages.reduce((sum, s) => sum + s.duration, 0);
 
-    let stageIdx = 0;
-    setCurrentStage(0);
-    setProgress(0);
+      // Calculate ticks per stage based on duration ratios
+      const ticksPerStage = filteredStages.map(s => Math.max(3, Math.round((s.duration / totalDuration) * (95 / (95 / totalStages)) * 15)));
+      let ticksInCurrentStage = 0;
 
-    const totalDuration = filteredStages.reduce((sum, s) => sum + s.duration, 0);
-    const stageBoundaries = [];
-    let cum = 0;
-    for (const s of filteredStages) {
-      cum += s.duration;
-      stageBoundaries.push((cum / totalDuration) * 100);
-    }
+      if (intervalRef.current) clearInterval(intervalRef.current);
 
-    let progressVal = 0;
-    const tickMs = 60;
-    const maxProgress = 95;
-    const increment = maxProgress / (totalDuration / tickMs);
-
-    const interval = setInterval(() => {
-      progressVal = Math.min(progressVal + increment, maxProgress);
-      setProgress(progressVal);
-
-      // Find current stage
-      for (let i = 0; i < stageBoundaries.length; i++) {
-        if (progressVal < stageBoundaries[i]) {
-          if (stageIdx !== i) {
-            stageIdx = i;
-            setCurrentStage(i);
+      intervalRef.current = setInterval(() => {
+        // If API done, fast-forward
+        if (apiDoneRef.current) {
+          stageIdx++;
+          if (stageIdx >= totalStages) {
+            setProgress(100);
+            setCurrentStage(totalStages - 1);
+            clearInterval(intervalRef.current);
+            intervalRef.current = null;
+            setTimeout(() => setVisible(false), 350);
+            return;
           }
-          break;
+          setCurrentStage(stageIdx);
+          setProgress(Math.min((stageIdx + 0.5) * stagePercent, 95));
+          return;
         }
-      }
-    }, tickMs);
 
-    return () => clearInterval(interval);
-  }, [visible, filteredStages]);
+        // Normal progression
+        ticksInCurrentStage++;
+        const currentStageTicks = ticksPerStage[stageIdx] || 10;
+        const stageProgress = ticksInCurrentStage / currentStageTicks;
+        prog = (stageIdx + stageProgress) * stagePercent;
+        setProgress(Math.min(prog, 95));
 
-  // When API is done, fast-forward remaining stages then hide
+        if (ticksInCurrentStage >= currentStageTicks && stageIdx < totalStages - 1) {
+          stageIdx++;
+          ticksInCurrentStage = 0;
+          setCurrentStage(stageIdx);
+        }
+      }, apiDoneRef.current ? 300 : tickMs);
+    } else {
+      // API finished
+      apiDoneRef.current = true;
+    }
+
+    return () => {
+      // Don't clear interval on isLoading=false — let fast-forward finish
+    };
+  }, [isLoading]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Cleanup on unmount
   useEffect(() => {
-    if (!apiDone || !visible) return;
-
-    // Fast-forward: move through remaining stages quickly
-    let idx = currentStage;
-    const fastForward = setInterval(() => {
-      idx++;
-      if (idx >= totalStages) {
-        clearInterval(fastForward);
-        setProgress(100);
-        // Small delay before hiding to show 100%
-        setTimeout(() => setVisible(false), 300);
-      } else {
-        setCurrentStage(idx);
-        // Jump progress proportionally
-        const totalDuration = filteredStages.reduce((sum, s) => sum + s.duration, 0);
-        let cum = 0;
-        for (let i = 0; i <= idx; i++) cum += filteredStages[i].duration;
-        setProgress(Math.min((cum / totalDuration) * 100, 95));
-      }
-    }, 350);
-
-    return () => clearInterval(fastForward);
-  }, [apiDone, visible, currentStage, totalStages, filteredStages]);
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, []);
 
   if (!visible) return null;
 
   const CurrentIcon = filteredStages[currentStage]?.icon || Loader2;
-  const currentLabel = filteredStages[currentStage]?.label || { en: 'Processing...', ru: 'Обработка...' };
+  const currentLabel = filteredStages[currentStage]?.label[language] || filteredStages[currentStage]?.label.en || '';
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="w-full max-w-md p-8 text-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+      <div className="bg-[#111113] border border-white/10 rounded-2xl p-8 max-w-sm w-full mx-4 text-center shadow-2xl">
         {/* Animated Icon */}
         <div className="relative mb-8">
           <div className="absolute inset-0 bg-[#FF3B30]/20 rounded-full blur-3xl animate-pulse" />
@@ -128,9 +117,9 @@ export const GenerationProgress = ({
           </div>
         </div>
 
-        {/* Current Stage Text */}
-        <h3 className="text-xl font-semibold text-white mb-2 animate-pulse" style={{ fontFamily: 'Manrope, sans-serif' }}>
-          {currentLabel[language] || currentLabel.en}
+        {/* Stage Label */}
+        <h3 className="text-lg font-semibold text-white mb-4 transition-all duration-300">
+          {currentLabel}
         </h3>
 
         {/* Progress Bar */}
@@ -141,70 +130,55 @@ export const GenerationProgress = ({
           />
         </div>
 
-        {/* Stage Indicators */}
-        <div className="flex justify-center gap-2 mb-6">
-          {filteredStages.map((stage, index) => (
+        {/* Stage Dots */}
+        <div className="flex justify-center gap-2 mb-4">
+          {filteredStages.map((_, index) => (
             <div
-              key={stage.id}
+              key={index}
               className={`w-2 h-2 rounded-full transition-all duration-300 ${
                 index <= currentStage 
                   ? 'bg-[#FF3B30]' 
                   : 'bg-white/20'
-              } ${index === currentStage ? 'scale-125' : ''}`}
+              }`}
             />
           ))}
         </div>
 
-        {/* Estimated Time */}
+        {/* Subtitle */}
         <p className="text-sm text-gray-500">
-          {type === 'image' 
-            ? (language === 'ru' ? 'Обычно занимает 30-60 секунд' : 'Usually takes 30-60 seconds')
-            : (language === 'ru' ? 'Обычно занимает несколько секунд' : 'Usually takes a few seconds')}
+          {language === 'ru' ? 'Обычно занимает несколько секунд' : 'Usually takes a few seconds'}
         </p>
-
-        {/* Cancel Button (optional) */}
-        {onCancel && (
-          <button
-            onClick={onCancel}
-            className="mt-4 text-sm text-gray-400 hover:text-white transition-colors"
-          >
-            {language === 'ru' ? 'Отмена' : 'Cancel'}
-          </button>
-        )}
       </div>
     </div>
   );
 };
 
-// Inline Progress for cards/sections
-export const InlineProgress = ({ isLoading, type = 'content', size = 'md' }) => {
+// Inline progress indicator
+export const InlineProgress = ({ isLoading, size = 'md' }) => {
   const { language } = useLanguage();
   const [dotCount, setDotCount] = useState(1);
 
   useEffect(() => {
     if (!isLoading) return;
     const interval = setInterval(() => {
-      setDotCount(prev => prev >= 3 ? 1 : prev + 1);
-    }, 500);
+      setDotCount(prev => (prev % 3) + 1);
+    }, 400);
     return () => clearInterval(interval);
   }, [isLoading]);
 
   if (!isLoading) return null;
 
   const sizeClasses = {
-    sm: 'p-3 text-sm',
-    md: 'p-4 text-base',
-    lg: 'p-6 text-lg'
+    sm: 'h-8 px-3 text-xs',
+    md: 'h-10 px-4 text-sm',
+    lg: 'h-12 px-5 text-base'
   };
 
   return (
     <div className={`flex items-center justify-center gap-3 ${sizeClasses[size]} bg-[#FF3B30]/10 rounded-xl border border-[#FF3B30]/20`}>
       <Loader2 className="w-5 h-5 text-[#FF3B30] animate-spin" />
-      <span className="text-white font-medium">
-        {type === 'image' 
-          ? (language === 'ru' ? 'Создаём изображение' : 'Creating image')
-          : (language === 'ru' ? 'Генерируем контент' : 'Generating content')}
-        {'.'.repeat(dotCount)}
+      <span className="text-gray-300 font-medium">
+        {language === 'ru' ? 'Создаём' : 'Creating'}{'.'.repeat(dotCount)}
       </span>
     </div>
   );
