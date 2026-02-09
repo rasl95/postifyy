@@ -5227,10 +5227,18 @@ async def export_analytics(
 # Include router
 app.include_router(api_router)
 
+cors_origins_raw = os.environ.get('CORS_ORIGINS', '*')
+if cors_origins_raw.strip() == '*':
+    allow_all_origins = True
+    cors_origin_list = []
+else:
+    allow_all_origins = False
+    cors_origin_list = [o.strip() for o in cors_origins_raw.split(',') if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_credentials=True,
-    allow_origins=os.environ.get('CORS_ORIGINS', '*').split(','),
+    allow_credentials=not allow_all_origins,
+    allow_origins=cors_origin_list if not allow_all_origins else ["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
