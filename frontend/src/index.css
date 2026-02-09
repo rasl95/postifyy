@@ -106,6 +106,16 @@ code {
     }
 }
 
+/* Mobile header safe-area offset utilities */
+@media (max-width: 767px) {
+    .mobile-header-offset-top {
+        top: calc(4rem + env(safe-area-inset-top, 0px));
+    }
+    .mobile-header-offset-pt {
+        padding-top: calc(4rem + env(safe-area-inset-top, 0px));
+    }
+}
+
 @layer base {
     [data-debug-wrapper="true"] {
         display: contents !important;
