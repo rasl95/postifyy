@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
 import { Button } from './ui/button';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Sparkles, Copy, Check, ExternalLink, PartyPopper, ArrowRight, X } from 'lucide-react';
+import { Sparkles, Copy, Check, PartyPopper, Gift, Zap } from 'lucide-react';
 import { toast } from 'sonner';
 import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 const APP_URL = typeof window !== 'undefined' ? window.location.origin : '';
 const SHARE_DISMISSED_KEY = 'postify_first_share_dismissed';
+const BONUS_CREDITS = 3;
 
 const TwitterIcon = ({ className }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
@@ -25,72 +26,95 @@ const WhatsAppIcon = ({ className }) => (
 );
 
 const SHARE_PLATFORMS = [
-  { 
-    id: 'twitter', 
-    name: 'X (Twitter)', 
-    icon: TwitterIcon, 
-    color: 'bg-white/10 hover:bg-white/15 text-white',
-    getUrl: (text, url) => `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`
-  },
-  { 
-    id: 'telegram', 
-    name: 'Telegram', 
-    icon: TelegramIcon, 
-    color: 'bg-[#0088cc]/15 hover:bg-[#0088cc]/25 text-[#0088cc]',
-    getUrl: (text, url) => `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`
-  },
-  { 
-    id: 'linkedin', 
-    name: 'LinkedIn', 
-    icon: LinkedInIcon, 
-    color: 'bg-[#0A66C2]/15 hover:bg-[#0A66C2]/25 text-[#0A66C2]',
-    getUrl: (text, url) => `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`
-  },
-  { 
-    id: 'whatsapp', 
-    name: 'WhatsApp', 
-    icon: WhatsAppIcon, 
-    color: 'bg-[#25D366]/15 hover:bg-[#25D366]/25 text-[#25D366]',
-    getUrl: (text, url) => `https://wa.me/?text=${encodeURIComponent(text + '\n\n' + url)}`
-  }
+  { id: 'twitter', name: 'X (Twitter)', icon: TwitterIcon, color: 'bg-white/10 hover:bg-white/20 text-white',
+    getUrl: (text, url) => `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}` },
+  { id: 'telegram', name: 'Telegram', icon: TelegramIcon, color: 'bg-[#0088cc]/15 hover:bg-[#0088cc]/25 text-[#0088cc]',
+    getUrl: (text, url) => `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}` },
+  { id: 'linkedin', name: 'LinkedIn', icon: LinkedInIcon, color: 'bg-[#0A66C2]/15 hover:bg-[#0A66C2]/25 text-[#0A66C2]',
+    getUrl: (text, url) => `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}` },
+  { id: 'whatsapp', name: 'WhatsApp', icon: WhatsAppIcon, color: 'bg-[#25D366]/15 hover:bg-[#25D366]/25 text-[#25D366]',
+    getUrl: (text, url) => `https://wa.me/?text=${encodeURIComponent(text + '\n\n' + url)}` }
 ];
 
-export const ShareFirstPostModal = ({ isOpen, onClose, generatedContent, contentType }) => {
-  const { user, token } = useAuth();
+export const ShareFirstPostModal = ({ isOpen, onClose, generatedContent, contentType, generationId }) => {
+  const { user, token, checkAuth } = useAuth();
   const { language } = useLanguage();
   const [copied, setCopied] = useState(false);
   const [referralCode, setReferralCode] = useState('');
+  const [rewardState, setRewardState] = useState('idle'); // idle | sharing | rewarded
+  const [sharedPlatforms, setSharedPlatforms] = useState(new Set());
+  const [bonusClaimed, setBonusClaimed] = useState(false);
 
   useEffect(() => {
-    if (isOpen && user?.referral_code) {
+    if (!isOpen) return;
+    if (user?.referral_code) {
       setReferralCode(user.referral_code);
-    } else if (isOpen && token) {
+    } else if (token) {
       axios.get(`${API_URL}/api/referrals/stats`, {
         headers: { Authorization: `Bearer ${token}` }
+      }).then(res => setReferralCode(res.data.referral_code || '')).catch(() => {});
+    }
+    // Check if already claimed
+    if (token) {
+      axios.get(`${API_URL}/api/share/first-post/status`, {
+        headers: { Authorization: `Bearer ${token}` }
       }).then(res => {
-        setReferralCode(res.data.referral_code || '');
+        if (res.data.bonus_claimed) setBonusClaimed(true);
       }).catch(() => {});
     }
   }, [isOpen, user, token]);
 
   const referralUrl = referralCode ? `${APP_URL}/?ref=${referralCode}` : APP_URL;
-  
+
   const shareText = language === 'ru'
     ? 'AI создал мне пост за 2 секунды. Попробуйте Postify AI — бесплатно!'
     : 'AI created a post for me in 2 seconds. Try Postify AI — free!';
 
-  const handleSharePlatform = async (platform) => {
+  const handleSharePlatform = useCallback(async (platform) => {
+    // Open share window
     const url = platform.getUrl(shareText, referralUrl);
     window.open(url, '_blank', 'width=600,height=500');
     
-    // Track share event
-    try {
-      await axios.post(`${API_URL}/api/analytics/track`, {
-        event_type: 'first_post_share',
-        event_data: { platform: platform.id, referral_code: referralCode }
-      }, { headers: { Authorization: `Bearer ${token}` } });
-    } catch {}
-  };
+    setSharedPlatforms(prev => new Set([...prev, platform.id]));
+    
+    // Track share + claim bonus via dedicated endpoint
+    if (!bonusClaimed) {
+      setRewardState('sharing');
+      try {
+        const res = await axios.post(`${API_URL}/api/share/first-post`, {
+          platform: platform.id,
+          generation_id: generationId || null,
+          content_preview: generatedContent?.slice(0, 200) || null
+        }, { headers: { Authorization: `Bearer ${token}` } });
+        
+        if (res.data.bonus_granted) {
+          setBonusClaimed(true);
+          setRewardState('rewarded');
+          toast.success(
+            language === 'ru' 
+              ? `+${BONUS_CREDITS} генераций добавлено!` 
+              : `+${BONUS_CREDITS} generations added!`,
+            { duration: 4000 }
+          );
+          // Refresh user data to update credit count
+          await checkAuth();
+        } else {
+          setRewardState('rewarded');
+        }
+      } catch {
+        setRewardState('idle');
+      }
+    } else {
+      // Already claimed, just track the share
+      try {
+        await axios.post(`${API_URL}/api/share/first-post`, {
+          platform: platform.id,
+          generation_id: generationId || null,
+          content_preview: generatedContent?.slice(0, 200) || null
+        }, { headers: { Authorization: `Bearer ${token}` } });
+      } catch {}
+    }
+  }, [shareText, referralUrl, bonusClaimed, token, generationId, generatedContent, language, checkAuth]);
 
   const copyReferralLink = async () => {
     try {
@@ -109,36 +133,80 @@ export const ShareFirstPostModal = ({ isOpen, onClose, generatedContent, content
   };
 
   const contentPreview = generatedContent 
-    ? generatedContent.slice(0, 120) + (generatedContent.length > 120 ? '...' : '')
+    ? generatedContent.slice(0, 140) + (generatedContent.length > 140 ? '...' : '')
     : '';
 
   return (
     <Dialog open={isOpen} onOpenChange={handleDismiss}>
       <DialogContent className="sm:max-w-lg bg-[#0A0A0B] border-white/10 overflow-hidden" data-testid="share-first-post-modal">
-        {/* Celebration header */}
+        {/* Top gradient bar */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#FF3B30] via-[#FF6A3D] to-[#FFD60A]" />
         
         <DialogHeader className="text-center pt-4">
           <div className="relative">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#FF3B30]/20 to-[#FFD60A]/10 border border-[#FF3B30]/30 flex items-center justify-center">
-              <Sparkles className="w-7 h-7 text-[#FF3B30]" />
-            </div>
+            {rewardState === 'rewarded' ? (
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-green-500/15 border border-green-500/30 flex items-center justify-center animate-in zoom-in duration-300">
+                <Check className="w-8 h-8 text-green-400" />
+              </div>
+            ) : (
+              <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-[#FF3B30]/20 to-[#FFD60A]/10 border border-[#FF3B30]/30 flex items-center justify-center">
+                <Sparkles className="w-7 h-7 text-[#FF3B30]" />
+              </div>
+            )}
             <div className="absolute -top-1 -right-8 sm:right-24 w-8 h-8 text-[#FFD60A] animate-bounce">
               <PartyPopper className="w-6 h-6" />
             </div>
           </div>
+
           <DialogTitle className="text-xl sm:text-2xl text-white" data-testid="share-modal-title">
-            {language === 'ru' ? 'Ваш первый пост создан!' : 'Your first post is ready!'}
+            {rewardState === 'rewarded'
+              ? (language === 'ru' ? `+${BONUS_CREDITS} генерации добавлены!` : `+${BONUS_CREDITS} generations added!`)
+              : (language === 'ru' ? 'Ваш первый пост создан!' : 'Your first post is ready!')}
           </DialogTitle>
           <DialogDescription className="text-gray-400 mt-1.5">
-            {language === 'ru' 
-              ? 'Поделитесь с друзьями — каждый переход по вашей ссылке даст +5 генераций'
-              : 'Share with friends — each signup via your link gives you +5 generations'}
+            {rewardState === 'rewarded'
+              ? (language === 'ru' ? 'Спасибо за то, что поделились! Продолжайте создавать контент.' : 'Thanks for sharing! Keep creating great content.')
+              : (language === 'ru' ? 'Поделитесь и получите +3 бесплатные генерации мгновенно' : 'Share and get +3 free generations instantly')}
           </DialogDescription>
         </DialogHeader>
 
+        {/* Reward incentive banner */}
+        {rewardState !== 'rewarded' && !bonusClaimed && (
+          <div className="bg-gradient-to-r from-[#FF3B30]/10 to-[#FFD60A]/10 border border-[#FF3B30]/20 rounded-xl p-3 flex items-center gap-3" data-testid="share-reward-banner">
+            <div className="w-10 h-10 rounded-lg bg-[#FF3B30]/20 flex items-center justify-center flex-shrink-0">
+              <Gift className="w-5 h-5 text-[#FF3B30]" />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-white">
+                {language === 'ru' ? `+${BONUS_CREDITS} генерации` : `+${BONUS_CREDITS} generations`}
+              </p>
+              <p className="text-xs text-gray-400">
+                {language === 'ru' ? 'Поделитесь постом на любой платформе' : 'Share your post on any platform to claim'}
+              </p>
+            </div>
+            <div className="ml-auto">
+              <div className="px-2.5 py-1 bg-[#FF3B30] text-white text-xs font-bold rounded-full">
+                FREE
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Reward success animation */}
+        {rewardState === 'rewarded' && (
+          <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 text-center animate-in slide-in-from-bottom duration-300" data-testid="share-reward-success">
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <Zap className="w-5 h-5 text-green-400" />
+              <span className="text-lg font-bold text-green-400">+{BONUS_CREDITS}</span>
+            </div>
+            <p className="text-xs text-green-400/70">
+              {language === 'ru' ? 'Бонусные генерации добавлены к вашему аккаунту' : 'Bonus generations added to your account'}
+            </p>
+          </div>
+        )}
+
         {/* Content preview */}
-        {contentPreview && (
+        {contentPreview && rewardState !== 'rewarded' && (
           <div className="bg-white/[0.03] border border-white/5 rounded-xl p-3.5 mt-1" data-testid="share-content-preview">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-6 h-6 rounded-md bg-[#FF3B30]/20 flex items-center justify-center">
@@ -153,22 +221,34 @@ export const ShareFirstPostModal = ({ isOpen, onClose, generatedContent, content
         )}
 
         {/* Social share buttons */}
-        <div className="mt-3">
+        <div className="mt-2">
           <p className="text-xs text-gray-500 mb-3 text-center font-medium uppercase tracking-wider">
-            {language === 'ru' ? 'Поделиться через' : 'Share via'}
+            {rewardState === 'rewarded'
+              ? (language === 'ru' ? 'Поделиться ещё' : 'Share more')
+              : (language === 'ru' ? 'Выберите платформу' : 'Choose a platform')}
           </p>
           <div className="grid grid-cols-4 gap-2">
             {SHARE_PLATFORMS.map(platform => {
               const Icon = platform.icon;
+              const isShared = sharedPlatforms.has(platform.id);
               return (
                 <button
                   key={platform.id}
                   onClick={() => handleSharePlatform(platform)}
-                  className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border border-white/5 transition-all hover:scale-105 ${platform.color}`}
+                  className={`relative flex flex-col items-center gap-1.5 p-3 rounded-xl border transition-all hover:scale-105 ${
+                    isShared 
+                      ? 'border-green-500/30 bg-green-500/10' 
+                      : `border-white/5 ${platform.color}`
+                  }`}
                   data-testid={`share-${platform.id}-btn`}
                 >
-                  <Icon className="w-5 h-5" />
-                  <span className="text-[10px] font-medium opacity-80">{platform.name}</span>
+                  {isShared && (
+                    <div className="absolute -top-1.5 -right-1.5 w-4 h-4 bg-green-500 rounded-full flex items-center justify-center">
+                      <Check className="w-2.5 h-2.5 text-white" />
+                    </div>
+                  )}
+                  <Icon className={`w-5 h-5 ${isShared ? 'text-green-400' : ''}`} />
+                  <span className={`text-[10px] font-medium ${isShared ? 'text-green-400' : 'opacity-80'}`}>{platform.name}</span>
                 </button>
               );
             })}
@@ -178,15 +258,14 @@ export const ShareFirstPostModal = ({ isOpen, onClose, generatedContent, content
         {/* Referral link copy */}
         <div className="mt-3">
           <p className="text-xs text-gray-500 mb-2 text-center">
-            {language === 'ru' ? 'Или скопируйте ссылку' : 'Or copy your link'}
+            {language === 'ru' ? 'Ваша реферальная ссылка' : 'Your referral link'}
           </p>
           <div className="flex items-center gap-2">
             <div className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2.5 text-xs text-gray-400 truncate font-mono" data-testid="share-referral-link">
               {referralUrl}
             </div>
             <Button 
-              size="sm"
-              variant="outline"
+              size="sm" variant="outline"
               onClick={copyReferralLink}
               className="h-9 px-3 border-white/10 text-white hover:bg-white/10 shrink-0"
               data-testid="share-copy-link-btn"
@@ -196,22 +275,24 @@ export const ShareFirstPostModal = ({ isOpen, onClose, generatedContent, content
           </div>
         </div>
 
-        {/* Bonus callout */}
-        <div className="bg-[#FF3B30]/5 border border-[#FF3B30]/15 rounded-lg p-3 mt-2 text-center">
+        {/* Referral bonus callout */}
+        <div className="bg-[#FF3B30]/5 border border-[#FF3B30]/15 rounded-lg p-2.5 mt-2 text-center">
           <p className="text-xs text-[#FF3B30] font-medium">
             {language === 'ru' 
-              ? '+5 бесплатных генераций за каждого друга, который зарегистрируется'
-              : '+5 free generations for every friend who signs up'}
+              ? '+3 генерации за каждого друга, который зарегистрируется по ссылке'
+              : '+3 generations for every friend who signs up via your link'}
           </p>
         </div>
 
-        {/* Skip */}
+        {/* Dismiss */}
         <button 
           onClick={handleDismiss}
           className="text-xs text-gray-600 hover:text-gray-400 transition-colors text-center mt-1 block mx-auto"
           data-testid="share-skip-btn"
         >
-          {language === 'ru' ? 'Пропустить' : 'Skip for now'}
+          {rewardState === 'rewarded' 
+            ? (language === 'ru' ? 'Продолжить' : 'Continue creating') 
+            : (language === 'ru' ? 'Пропустить' : 'Skip for now')}
         </button>
       </DialogContent>
     </Dialog>
