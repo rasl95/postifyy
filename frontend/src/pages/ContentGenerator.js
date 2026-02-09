@@ -521,7 +521,7 @@ export const ContentGenerator = () => {
               </span>
               {!isPro && (
                 <>
-                  <span className="text-gray-600">·</span>
+                  <span className="text-gray-500">·</span>
                   <button 
                     onClick={() => window.location.href = '/settings'}
                     className="text-[#FF3B30] hover:underline flex items-center gap-1"
