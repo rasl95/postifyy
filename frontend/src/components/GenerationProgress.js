@@ -122,9 +122,9 @@ export const GenerationProgress = ({
       <div className="w-full max-w-md p-8 text-center">
         {/* Animated Icon */}
         <div className="relative mb-8">
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-500/30 to-pink-500/30 rounded-full blur-3xl animate-pulse" />
-          <div className="relative w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center">
-            <CurrentIcon className="w-10 h-10 text-purple-400 animate-pulse" />
+          <div className="absolute inset-0 bg-[#FF3B30]/20 rounded-full blur-3xl animate-pulse" />
+          <div className="relative w-24 h-24 mx-auto rounded-full bg-[#FF3B30]/15 border border-[#FF3B30]/30 flex items-center justify-center">
+            <CurrentIcon className="w-10 h-10 text-[#FF3B30] animate-pulse" />
           </div>
         </div>
 
@@ -136,7 +136,7 @@ export const GenerationProgress = ({
         {/* Progress Bar */}
         <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden mb-4">
           <div 
-            className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-300 ease-out"
+            className="h-full bg-gradient-to-r from-[#FF3B30] to-[#FF6A3D] rounded-full transition-all duration-300 ease-out"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -148,7 +148,7 @@ export const GenerationProgress = ({
               key={stage.id}
               className={`w-2 h-2 rounded-full transition-all duration-300 ${
                 index <= currentStage 
-                  ? 'bg-purple-500' 
+                  ? 'bg-[#FF3B30]' 
                   : 'bg-white/20'
               } ${index === currentStage ? 'scale-125' : ''}`}
             />
@@ -198,8 +198,8 @@ export const InlineProgress = ({ isLoading, type = 'content', size = 'md' }) => 
   };
 
   return (
-    <div className={`flex items-center justify-center gap-3 ${sizeClasses[size]} bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl border border-purple-500/20`}>
-      <Loader2 className="w-5 h-5 text-purple-400 animate-spin" />
+    <div className={`flex items-center justify-center gap-3 ${sizeClasses[size]} bg-[#FF3B30]/10 rounded-xl border border-[#FF3B30]/20`}>
+      <Loader2 className="w-5 h-5 text-[#FF3B30] animate-spin" />
       <span className="text-white font-medium">
         {type === 'image' 
           ? (language === 'ru' ? 'Создаём изображение' : 'Creating image')
