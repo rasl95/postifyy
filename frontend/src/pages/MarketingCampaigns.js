@@ -770,20 +770,18 @@ export const MarketingCampaigns = () => {
         // Campaign List
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {campaigns.length === 0 ? (
-            <Card className="col-span-full bg-white/5 border-white/10 border-dashed">
-              <CardContent className="py-16 text-center">
-                <Target className="w-16 h-16 mx-auto mb-4 text-gray-500" />
-                <h3 className="text-xl font-medium text-white mb-2">{t.noCampaigns}</h3>
-                <p className="text-gray-400 mb-6">{t.noCampaignsDesc}</p>
-                <Button 
-                  className="bg-[#FF3B30] hover:bg-[#FF4D42]"
-                  onClick={() => setShowCreateModal(true)}
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  {t.createCampaign}
-                </Button>
-              </CardContent>
-            </Card>
+            <div className="col-span-full py-16 text-center">
+              <Target className="w-12 h-12 mx-auto mb-4 text-gray-600" />
+              <h3 className="text-lg font-medium text-white mb-1">{t.noCampaigns}</h3>
+              <p className="text-sm text-gray-500 mb-6">{t.noCampaignsDesc}</p>
+              <Button 
+                className="bg-[#FF3B30] hover:bg-[#FF4D42]"
+                onClick={() => setShowCreateModal(true)}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                {t.createCampaign}
+              </Button>
+            </div>
           ) : (
             campaigns.map(campaign => (
               <Card 
