@@ -97,6 +97,15 @@ export const PricingPage = () => {
 
   const plans = PRICING_CONFIG.plans;
   const currentPlan = user?.subscription_plan || 'free';
+  const planRank = { free: 0, pro: 1, business: 2 };
+  const currentRank = planRank[currentPlan] || 0;
+
+  const getPlanStatus = (planId) => {
+    const rank = planRank[planId] || 0;
+    if (planId === currentPlan) return 'current';
+    if (rank < currentRank) return 'included';
+    return 'upgrade';
+  };
 
   return (
     <div className="max-w-6xl mx-auto space-y-10">
