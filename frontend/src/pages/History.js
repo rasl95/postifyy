@@ -151,7 +151,7 @@ const HistoryCard = ({
             className={`w-8 h-8 flex items-center justify-center rounded-lg transition-colors ${
               favorites[item.id]
                 ? 'text-amber-400 hover:bg-amber-500/10'
-                : 'text-gray-600 hover:text-gray-400 hover:bg-white/5'
+                : 'text-gray-500 hover:text-gray-300 hover:bg-white/5'
             }`}
             title={canFavorite
               ? (favorites[item.id] ? (language === 'ru' ? 'Убрать' : 'Unfavorite') : (language === 'ru' ? 'В избранное' : 'Favorite'))
@@ -166,7 +166,7 @@ const HistoryCard = ({
           {/* Copy */}
           <button
             onClick={() => onCopy(item.generated_content, item.id)}
-            className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-600 hover:text-white hover:bg-white/5 transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition-colors"
             data-testid={`copy-btn-${item.id}`}
           >
             {copiedId === item.id
@@ -218,13 +218,13 @@ const HistoryCard = ({
         <span>{language === 'ru' ? 'Создано' : 'Created'} {formatShortDate(item.created_at)}</span>
         {item.tone && item.tone !== 'neutral' && (
           <>
-            <span className="text-gray-600">·</span>
+            <span className="text-gray-500">·</span>
             <span className="capitalize">{item.tone}</span>
           </>
         )}
         {item.platform && (
           <>
-            <span className="text-gray-600">·</span>
+            <span className="text-gray-500">·</span>
             <span className="capitalize">{item.platform}</span>
           </>
         )}
@@ -440,7 +440,7 @@ export const History = () => {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-6 h-6 animate-spin text-gray-600" />
+        <Loader2 className="w-6 h-6 animate-spin text-gray-500" />
       </div>
     );
   }
@@ -522,7 +522,7 @@ export const History = () => {
         <TabsContent value="images" className="mt-4">
           {imageHistory.length === 0 ? (
             <div className="bg-[#111113] border border-white/[0.06] rounded-xl py-12 text-center">
-              <Image className="w-10 h-10 mx-auto mb-3 text-gray-700" />
+              <Image className="w-10 h-10 mx-auto mb-3 text-gray-500" />
               <p className="text-gray-500 text-sm">
                 {language === 'ru' ? 'Нет изображений' : 'No images yet'}
               </p>
@@ -558,7 +558,7 @@ export const History = () => {
                   </div>
                   <div className="p-3">
                     <p className="text-xs text-gray-400 line-clamp-2 leading-relaxed">{image.prompt}</p>
-                    <p className="text-[11px] text-gray-600 mt-1.5">{formatDate(image.created_at)}</p>
+                    <p className="text-[11px] text-gray-500 mt-1.5">{formatDate(image.created_at)}</p>
                   </div>
                 </div>
               ))}
