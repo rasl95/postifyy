@@ -98,7 +98,7 @@ export const Dashboard = () => {
               {remaining}
             </div>
             <Progress value={100 - usagePercent} className="h-2 mb-3" />
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-400">
               {user?.current_usage || 0} / {user?.monthly_limit || 3} {language === 'ru' ? 'использовано' : 'used'}
             </p>
             {!isPro && (
@@ -127,7 +127,7 @@ export const Dashboard = () => {
                 {language === 'ru' ? 'часов сэкономлено с Postify AI' : 'hours saved with Postify AI'}
               </span>
             </div>
-            <p className="text-xs text-gray-600 mt-0.5">
+            <p className="text-xs text-gray-500 mt-0.5">
               {language === 'ru' 
                 ? `= ${Math.round(hoursSaved * 15)}$ экономии (если 15$/час)`
                 : `= $${Math.round(hoursSaved * 15)} saved (at $15/hr)`}
