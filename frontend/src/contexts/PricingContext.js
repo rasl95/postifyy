@@ -158,6 +158,12 @@ export const PricingProvider = ({ children }) => {
     };
   }, [user, currentPlanConfig]);
 
+  // Check if credits are critically low (< 2 remaining)
+  const isCreditsCritical = useCallback(() => {
+    const stats = getUsageStats();
+    return stats.remainingCredits < 2 && stats.remainingCredits >= 0;
+  }, [getUsageStats]);
+
   // Check if credits are low (< 10 remaining)
   const isCreditsLow = useCallback(() => {
     const stats = getUsageStats();
