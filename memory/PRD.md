@@ -76,6 +76,14 @@ Import from GitHub https://github.com/rasl95/Postify-ai.git — AI content gener
 - Business card no longer has `opacity-90` when it's the current plan
 - `handleUpgrade` blocks downgrade attempts
 
+### Analytics Mobile Simplification (Feb 9)
+- Hero KPI block: single big number for total generations + trend badge + daily avg
+- Merged "missed opportunities" into one compact AI insight (no yellow cards)
+- Lightweight "next steps" section (no borders, just checkmarks + text)
+- Clear CTA: "Generate content for this week" always visible
+- Tabs for detailed views (Overview charts, AI Director, Recommendations, Weekly)
+- Files: Analytics.js (full rewrite)
+
 ## Backlog
 ### P1: Google OAuth, Email drip, A/B testing
 ### P2: Backend modularization (LLM fallback dedup), Platform publishing
