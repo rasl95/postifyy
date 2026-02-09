@@ -1,0 +1,84 @@
+{
+  "timestamp": "2026-02-09T10:11:22.465817",
+  "base_url": "https://postify-ai-4.preview.emergentagent.com",
+  "tests_run": 11,
+  "tests_passed": 10,
+  "success_rate": "90.9%",
+  "results": [
+    {
+      "test": "User Registration",
+      "status": "PASSED",
+      "expected_status": 201,
+      "actual_status": 201,
+      "response_preview": "{'access_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RfN2RkMjJkMTRAZXhhbXBsZS5jb20iLCJleHAiOjE3NzA3MTgyNDF9.l00kGoXKr0Chtiu1Zn_Y-_3IJhjbLfVg95iNMk3STds', 'token_type': 'bearer', 'u..."
+    },
+    {
+      "test": "User Login",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'access_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RfN2RkMjJkMTRAZXhhbXBsZS5jb20iLCJleHAiOjE3NzA3MTgyNDJ9.JYzky8R_8r1L2PRkIPOkJOVoGt3AL_FiMR9sBbNuoVs', 'token_type': 'bearer', 'u..."
+    },
+    {
+      "test": "Get User Profile (/auth/me)",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'email': 'test_7dd22d14@example.com', 'full_name': 'Test User', 'subscription_plan': 'free', 'monthly_limit': 3, 'current_usage': 0, 'stripe_customer_id': 'cus_TwkwKtQUsA0dKP', 'onboarding_completed'..."
+    },
+    {
+      "test": "Get Templates",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'templates': {'social_post': [{'id': 'product_promo', 'name': {'en': 'Product Promotion', 'ru': '\u041f\u0440\u043e\u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0435 \u043f\u0440\u043e\u0434\u0443\u043a\u0442\u0430'}, 'icon': '\ud83d\udecd\ufe0f', 'tone': 'selling', 'goal': 'sales', 'structure': 'Hook \u2192 Benefit..."
+    },
+    {
+      "test": "Generate Social Post",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'id': '4921b84f-1886-4137-a8ab-05b278214ea0', 'generation_id': '4921b84f-1886-4137-a8ab-05b278214ea0', 'content': 'Unlock your creative potential! \ud83d\ude80 Discover innovative strategies with Postify AI tha..."
+    },
+    {
+      "test": "Generate AI Image",
+      "status": "ERROR",
+      "error": "HTTPSConnectionPool(host='postify-ai-4.preview.emergentagent.com', port=443): Read timed out. (read timeout=30)"
+    },
+    {
+      "test": "Create Stripe Checkout Session",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'checkout_url': 'https://checkout.stripe.com/c/pay/cs_live_b15fbxIyYuFlUn0VCRXqCB98wFmiOUuD0s8TnexchsOyBID0sNR8dQ8hCT#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blppbHNgWjA0VnJ1Mn1McmJwSzBzT2N..."
+    },
+    {
+      "test": "Save User Preferences",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'message': 'Preferences saved successfully', 'preferences': {'user_email': 'test_7dd22d14@example.com', 'content_goals': ['social_posts', 'ai_images'], 'platforms': ['instagram', 'tiktok'], 'business..."
+    },
+    {
+      "test": "Get User Preferences",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'preferences': {'user_email': 'test_7dd22d14@example.com', 'business_niche': 'marketing', 'content_goals': ['social_posts', 'ai_images'], 'platforms': ['instagram', 'tiktok'], 'preferred_tone': 'neut..."
+    },
+    {
+      "test": "Save Draft",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'saved': True, 'updated_at': '2026-02-09T10:11:22.382299+00:00'}"
+    },
+    {
+      "test": "Get Draft",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'draft': {'draft_type': 'content', 'user_email': 'test_7dd22d14@example.com', 'draft_data': {'content_type': 'social_post', 'topic': 'Test draft topic', 'tone': 'neutral'}, 'updated_at': '2026-02-09T..."
+    }
+  ]
+}
