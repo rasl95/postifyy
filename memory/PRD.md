@@ -108,6 +108,16 @@ Import from GitHub https://github.com/rasl95/Postify-ai.git — AI content gener
 - Save button shows "Saving..." with spinner during API call
 - Files: BrandSettings.js
 
+### Campaign Screen Mobile Cleanup (Feb 9)
+- Merged strategy summary + generation CTA into one borderless section
+- "Generate Content" is full-width h-14 primary button (no surrounding card)
+- Removed duplicate "posts/days" counter (appears only in header)
+- Replaced colored bars with compact inline dots (● Education 2)
+- Reduced border usage: bg-[#111113] + border-white/[0.06] instead of heavy outlines
+- Post cards: lighter, with expand/collapse toggle and inline action buttons
+- Campaign list cards: simplified with dot-based content mix
+- Files: MarketingCampaigns.js
+
 ## Backlog
 ### P1: Google OAuth, Email drip, A/B testing
 ### P2: Backend modularization (LLM fallback dedup), Platform publishing
