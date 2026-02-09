@@ -188,22 +188,13 @@ export const DashboardLayout = () => {
 
           {/* User Section */}
           <div className="p-4 border-t border-white/10">
-            <div className="px-4 py-3 mb-3 bg-white/5 rounded-xl border border-white/10">
+            <div className="px-4 py-3 bg-white/5 rounded-xl border border-white/10">
               <div className="text-sm font-medium text-white truncate">{user?.email}</div>
               <div className="text-xs text-gray-500 capitalize mt-1 flex items-center gap-2">
                 <span className={`w-2 h-2 rounded-full ${user?.subscription_plan === 'pro' || user?.subscription_plan === 'business' ? 'bg-[#FF3B30]' : 'bg-gray-500'}`} />
                 {user?.subscription_plan || 'Free'} Plan
               </div>
             </div>
-            <Button
-              variant="ghost"
-              className="w-full justify-start text-gray-400 hover:text-white hover:bg-white/5"
-              onClick={handleLogout}
-              data-testid="logout-btn"
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              {t('sidebar.logout')}
-            </Button>
           </div>
         </div>
       </div>
