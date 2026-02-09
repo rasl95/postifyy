@@ -122,7 +122,8 @@ export const DashboardLayout = () => {
       {/* Mobile Overlay */}
       {sidebarOpen && (
         <div
-          className="md:hidden fixed inset-0 bg-black/70 z-40 top-16"
+          className="md:hidden fixed inset-0 bg-black/70 z-40"
+          style={{ top: 'calc(4rem + env(safe-area-inset-top, 0px))' }}
           onClick={closeSidebar}
         />
       )}
@@ -132,9 +133,8 @@ export const DashboardLayout = () => {
         fixed inset-y-0 left-0 w-64 bg-[#111113] border-r border-white/10 z-50
         transform transition-transform duration-300 ease-in-out
         md:translate-x-0 md:top-0
-        ${sidebarOpen ? 'translate-x-0 top-16' : '-translate-x-full top-16'}
-        md:top-0
-      `}>
+        ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+      `} style={{ top: window.innerWidth < 768 ? 'calc(4rem + env(safe-area-inset-top, 0px))' : undefined }}>
         <div className="flex flex-col h-full">
           {/* Logo - Desktop Only */}
           <div className="hidden md:flex p-6 border-b border-white/10 justify-between items-center">
