@@ -118,6 +118,17 @@ Import from GitHub https://github.com/rasl95/Postify-ai.git — AI content gener
 - Campaign list cards: simplified with dot-based content mix
 - Files: MarketingCampaigns.js
 
+### Content Generator Simplification (Feb 9)
+- Removed Card wrapper, usage progress block, language selector card, trust badges, PresetTemplates
+- 3 goal tabs (Posts/Video/Product) as primary focus with full-width pill tabs
+- "More options" (audience, post goal) behind `<details>` collapse
+- "Quick start templates" behind `<details>` collapse — only shown when no result
+- Inline RU/EN language toggle in header (compact)
+- Usage shown as "3 generations left · Upgrade" in subtitle
+- Result section: flat layout, icon-only action buttons, compact quick actions
+- Mobile sticky generate button with safe-area padding
+- Files: ContentGenerator.js
+
 ## Backlog
 ### P1: Google OAuth, Email drip, A/B testing
 ### P2: Backend modularization (LLM fallback dedup), Platform publishing
