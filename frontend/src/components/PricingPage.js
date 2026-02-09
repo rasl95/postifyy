@@ -205,15 +205,17 @@ export const PricingPage = () => {
 
             <Button
               variant="outline"
-              className={`w-full py-6 ${currentPlan === 'free' 
+              className={`w-full py-6 ${getPlanStatus('free') !== 'upgrade'
                 ? 'bg-white/5 text-gray-400 border-white/10 cursor-default' 
                 : 'border-white/20 text-white hover:bg-white/10'}`}
-              disabled={currentPlan === 'free'}
+              disabled={getPlanStatus('free') !== 'upgrade'}
               data-testid="pricing-free-btn"
             >
-              {currentPlan === 'free' 
+              {getPlanStatus('free') === 'current'
                 ? (language === 'ru' ? 'Текущий план' : 'Current Plan')
-                : (language === 'ru' ? 'Начать бесплатно' : 'Start Free')}
+                : getPlanStatus('free') === 'included'
+                  ? (language === 'ru' ? 'Включено' : 'Included')
+                  : (language === 'ru' ? 'Начать бесплатно' : 'Start Free')}
             </Button>
           </CardContent>
         </Card>
