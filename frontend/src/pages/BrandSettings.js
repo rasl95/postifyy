@@ -441,11 +441,14 @@ export const BrandSettings = () => {
       return;
     }
     setSaving(true);
+    setSaved(false);
     try {
       await axios.post(`${API_URL}/api/brand-profile`, profile, {
         headers: { Authorization: `Bearer ${token}` }
       });
+      setSaved(true);
       toast.success(language === 'ru' ? 'Профиль бренда сохранён' : 'Brand profile saved');
+      setTimeout(() => setSaved(false), 3000);
     } catch (error) {
       toast.error(error.response?.data?.detail || 'Failed to save');
     } finally {
