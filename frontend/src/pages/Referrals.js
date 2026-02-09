@@ -88,21 +88,21 @@ export const Referrals = () => {
           <CardContent className="p-4 text-center">
             <Users className="w-6 h-6 text-[#FF3B30] mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats?.total_referrals || 0}</div>
-            <div className="text-xs text-gray-500">{language === 'ru' ? 'Приглашено' : 'Invited'}</div>
+            <div className="text-xs text-gray-400">{language === 'ru' ? 'Приглашено' : 'Invited'}</div>
           </CardContent>
         </Card>
         <Card className="bg-white/5 border-white/10">
           <CardContent className="p-4 text-center">
             <Coins className="w-6 h-6 text-[#FF3B30] mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">{stats?.bonus_credits || 0}</div>
-            <div className="text-xs text-gray-500">{language === 'ru' ? 'Бонус-кредиты' : 'Bonus credits'}</div>
+            <div className="text-xs text-gray-400">{language === 'ru' ? 'Бонус-кредиты' : 'Bonus credits'}</div>
           </CardContent>
         </Card>
         <Card className="bg-white/5 border-white/10">
           <CardContent className="p-4 text-center">
             <Sparkles className="w-6 h-6 text-[#FF3B30] mx-auto mb-2" />
             <div className="text-2xl font-bold text-white">+{stats?.rewards?.referrer || 5}</div>
-            <div className="text-xs text-gray-500">{language === 'ru' ? 'За друга' : 'Per friend'}</div>
+            <div className="text-xs text-gray-400">{language === 'ru' ? 'За друга' : 'Per friend'}</div>
           </CardContent>
         </Card>
       </div>
