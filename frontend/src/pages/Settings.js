@@ -117,7 +117,7 @@ export const Settings = () => {
             )}
           </div>
           {isPaidPlan && (
-            <p className="text-xs text-gray-600 mt-4">
+            <p className="text-xs text-gray-500 mt-4">
               {t('settings.billingHint')}
             </p>
           )}

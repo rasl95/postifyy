@@ -481,7 +481,7 @@ export const Analytics = () => {
           ) : (
             <Card className="bg-white/5 border-white/10 border-dashed">
               <CardContent className="py-12 text-center">
-                <Lock className="w-12 h-12 mx-auto mb-4 text-gray-600" />
+                <Lock className="w-12 h-12 mx-auto mb-4 text-gray-500" />
                 <h3 className="text-lg font-medium text-white mb-2">{t.upgradeForMore}</h3>
                 <p className="text-gray-400 mb-4">
                   {language === 'ru' 
@@ -627,7 +627,7 @@ export const Analytics = () => {
           {recommendations?.locked ? (
             <Card className="bg-white/5 border-white/10 border-dashed">
               <CardContent className="py-12 text-center">
-                <Rocket className="w-12 h-12 mx-auto mb-4 text-gray-600" />
+                <Rocket className="w-12 h-12 mx-auto mb-4 text-gray-500" />
                 <h3 className="text-lg font-medium text-white mb-2">{t.unlockPro}</h3>
                 <Button className="bg-[#FF3B30] hover:bg-[#FF4D42]" onClick={() => navigate('/pricing')}>
                   <Zap className="w-4 h-4 mr-2" />
@@ -696,7 +696,7 @@ export const Analytics = () => {
           {weeklyReport?.locked ? (
             <Card className="bg-white/5 border-white/10 border-dashed">
               <CardContent className="py-12 text-center">
-                <Calendar className="w-12 h-12 mx-auto mb-4 text-gray-600" />
+                <Calendar className="w-12 h-12 mx-auto mb-4 text-gray-500" />
                 <h3 className="text-lg font-medium text-white mb-2">{t.unlockPro}</h3>
                 <Button className="bg-[#FF3B30] hover:bg-[#FF4D42]" onClick={() => navigate('/pricing')}>
                   <Zap className="w-4 h-4 mr-2" />

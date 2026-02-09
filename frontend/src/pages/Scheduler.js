@@ -400,7 +400,7 @@ export const Scheduler = () => {
                       );
                     })}
                     {dayPosts.length > 2 && (
-                      <span className="text-[10px] text-gray-600">+{dayPosts.length - 2}</span>
+                      <span className="text-[10px] text-gray-500">+{dayPosts.length - 2}</span>
                     )}
                   </div>
                 );

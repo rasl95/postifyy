@@ -403,7 +403,7 @@ export const ImageGenerator = () => {
                       : 'Describe the image you want to create...'}
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
-                    className="min-h-[100px] bg-[#0A0A0B] border-white/10 text-white placeholder:text-gray-600"
+                    className="min-h-[100px] bg-[#0A0A0B] border-white/10 text-white placeholder:text-gray-500"
                     data-testid="image-prompt-input"
                   />
                 </div>
@@ -569,7 +569,7 @@ export const ImageGenerator = () => {
                   {/* Selected ratio label */}
                   <div className="text-center text-xs text-gray-500">
                     {language === 'ru' ? 'Размер' : 'Size'}: {getCurrentRatio()} 
-                    <span className="text-gray-600 ml-1">
+                    <span className="text-gray-500 ml-1">
                       ({ASPECT_RATIOS.find(r => r.id === getCurrentRatio())?.description[language] || ''})
                     </span>
                   </div>

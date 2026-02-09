@@ -434,7 +434,7 @@ export const Favorites = () => {
                   <CardHeader className="pb-3">
                     <div className="flex justify-between items-start gap-4">
                       <div className="flex items-start gap-3 flex-1 min-w-0">
-                        <div className="hidden md:flex cursor-grab text-gray-600 hover:text-gray-400 mt-1">
+                        <div className="hidden md:flex cursor-grab text-gray-500 hover:text-gray-400 mt-1">
                           <GripVertical className="w-4 h-4" />
                         </div>
                         <div className="flex-1 min-w-0">
@@ -497,7 +497,7 @@ export const Favorites = () => {
                     <div className="bg-[#0A0A0B] p-4 rounded-xl border border-white/5 text-sm whitespace-pre-wrap text-gray-300 max-h-40 overflow-y-auto">
                       {item.generated_content}
                     </div>
-                    <div className="mt-3 flex items-center gap-4 text-xs text-gray-600">
+                    <div className="mt-3 flex items-center gap-4 text-xs text-gray-500">
                       <span>{language === 'ru' ? 'Тон' : 'Tone'}: {item.tone}</span>
                       <span>{item.tokens_used} {t('history.tokens')}</span>
                     </div>
@@ -599,7 +599,7 @@ export const Favorites = () => {
               >
                 <FolderOpen className="w-5 h-5" style={{ color: folder.color }} />
                 <span>{folder.name}</span>
-                <ChevronRight className="w-4 h-4 ml-auto text-gray-600" />
+                <ChevronRight className="w-4 h-4 ml-auto text-gray-500" />
               </button>
             ))}
           </div>
