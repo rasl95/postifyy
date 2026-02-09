@@ -350,6 +350,103 @@ class PostifyAPITester:
             print(f"❌ Failed to get draft")
             return False
 
+    def test_share_first_post_functionality(self):
+        """Test share first post feature with bonus credits"""
+        print("\n" + "="*50)
+        print("TESTING SHARE FIRST POST FUNCTIONALITY")
+        print("="*50)
+        
+        # First, check the initial share status (should be false for new user)
+        success, response = self.run_test(
+            "Get Initial Share Status",
+            "GET",
+            "share/first-post/status",
+            200
+        )
+        
+        if success:
+            has_shared = response.get('has_shared', True)  # Should be False for new user
+            bonus_claimed = response.get('bonus_claimed', True)  # Should be False for new user
+            print(f"✅ Initial share status - has_shared: {has_shared}, bonus_claimed: {bonus_claimed}")
+            
+            if has_shared or bonus_claimed:
+                print(f"⚠️ WARNING: New user already has share status set (has_shared: {has_shared}, bonus_claimed: {bonus_claimed})")
+        else:
+            print(f"❌ Failed to get initial share status")
+            return False
+            
+        # Test sharing first post and claiming bonus
+        success, response = self.run_test(
+            "Share First Post (Claim Bonus)",
+            "POST",
+            "share/first-post",
+            200,
+            data={
+                "platform": "twitter",
+                "generation_id": "test_gen_123",
+                "content_preview": "Test content for AI marketing tips sharing functionality"
+            }
+        )
+        
+        if success:
+            bonus_granted = response.get('bonus_granted', False)
+            bonus_amount = response.get('bonus_amount', 0)
+            print(f"✅ First share completed - bonus_granted: {bonus_granted}, bonus_amount: {bonus_amount}")
+            
+            if not bonus_granted or bonus_amount != 3:
+                print(f"❌ Expected bonus_granted=True and bonus_amount=3, got bonus_granted={bonus_granted}, bonus_amount={bonus_amount}")
+                return False
+        else:
+            print(f"❌ Failed to share first post")
+            return False
+            
+        # Test sharing again (should NOT grant bonus second time)
+        success, response = self.run_test(
+            "Share First Post Again (No Bonus)",
+            "POST",
+            "share/first-post",
+            200,
+            data={
+                "platform": "linkedin",
+                "generation_id": "test_gen_456",
+                "content_preview": "Second share test content"
+            }
+        )
+        
+        if success:
+            bonus_granted = response.get('bonus_granted', True)  # Should be False on second share
+            bonus_amount = response.get('bonus_amount', 1)  # Should be 0 on second share
+            print(f"✅ Second share completed - bonus_granted: {bonus_granted}, bonus_amount: {bonus_amount}")
+            
+            if bonus_granted or bonus_amount != 0:
+                print(f"❌ Expected no bonus on second share, got bonus_granted={bonus_granted}, bonus_amount={bonus_amount}")
+                return False
+        else:
+            print(f"❌ Failed second share")
+            return False
+            
+        # Check final share status (should show has_shared=True, bonus_claimed=True)
+        success, response = self.run_test(
+            "Get Final Share Status",
+            "GET",
+            "share/first-post/status",
+            200
+        )
+        
+        if success:
+            has_shared = response.get('has_shared', False)
+            bonus_claimed = response.get('bonus_claimed', False)
+            print(f"✅ Final share status - has_shared: {has_shared}, bonus_claimed: {bonus_claimed}")
+            
+            if not has_shared or not bonus_claimed:
+                print(f"❌ Expected has_shared=True and bonus_claimed=True, got has_shared={has_shared}, bonus_claimed={bonus_claimed}")
+                return False
+                
+            return True
+        else:
+            print(f"❌ Failed to get final share status")
+            return False
+
     def run_all_tests(self):
         """Run all API tests in sequence"""
         print("🚀 Starting Postify AI Backend API Tests")
