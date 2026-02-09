@@ -3890,13 +3890,29 @@ Generate a compelling post with:
                 if MOCK_GENERATION:
                     content = f"[MOCK] {pillar.upper()} post #{post_index + 1}\n\nTopic: {topic}\nTone: {tone}\n\n#mock #test #{pillar}"
                 elif use_emergent_llm:
-                    session_id = f"campaign_{request.campaign_id}_{post_index}"
-                    chat = LlmChat(
-                        api_key=emergent_llm_key,
-                        session_id=session_id,
-                        system_message=system_prompt
-                    ).with_model("openai", "gpt-4o-mini")
-                    content = await chat.send_message(UserMessage(text=user_prompt))
+                    try:
+                        session_id = f"campaign_{request.campaign_id}_{post_index}"
+                        chat = LlmChat(
+                            api_key=emergent_llm_key,
+                            session_id=session_id,
+                            system_message=system_prompt
+                        ).with_model("openai", "gpt-4o-mini")
+                        content = await chat.send_message(UserMessage(text=user_prompt))
+                    except Exception as emergent_err:
+                        logger.warning(f"Emergent LLM campaign gen failed: {emergent_err}, fallback to OpenAI")
+                        if openai_client:
+                            response = openai_client.chat.completions.create(
+                                model="gpt-4o-mini",
+                                messages=[
+                                    {"role": "system", "content": system_prompt},
+                                    {"role": "user", "content": user_prompt}
+                                ],
+                                max_tokens=500,
+                                temperature=0.8
+                            )
+                            content = response.choices[0].message.content
+                        else:
+                            raise emergent_err
                 else:
                     response = openai_client.chat.completions.create(
                         model="gpt-4o-mini",
