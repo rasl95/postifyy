@@ -202,7 +202,7 @@ export const OnboardingWizard = ({ isOpen, onClose, onComplete }) => {
                   ? (language === 'ru' ? 'Добро пожаловать в Postify AI!' : 'Welcome to Postify AI!')
                   : step === 4
                   ? (language === 'ru' ? 'Ваш первый AI-пост' : 'Your first AI post')
-                  : (language === 'ru' ? 'Разблокируйте больше' : 'Unlock more')
+                  : (language === 'ru' ? 'Всё готово!' : 'All set!')
                 }
               </h2>
               <p className="text-sm text-gray-400">
