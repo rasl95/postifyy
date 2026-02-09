@@ -317,7 +317,7 @@ export const PricingPage = () => {
         </Card>
 
         {/* Business Plan */}
-        <Card className="bg-[#111113] border-white/5 relative opacity-90">
+        <Card className={`bg-[#111113] border-white/5 relative ${getPlanStatus('business') === 'upgrade' ? 'opacity-90' : ''}`}>
           <CardHeader className="pb-2">
             <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center mb-4">
               <Crown className="w-6 h-6 text-gray-500" />
