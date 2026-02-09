@@ -93,6 +93,13 @@ Import from GitHub https://github.com/rasl95/Postify-ai.git — AI content gener
 - Progress indicator with checkmarks for completed steps
 - Files: BrandSettings.js (full rewrite)
 
+### Brand Save Feedback Fix (Feb 9)
+- Fixed Toaster: removed broken `next-themes` import, hardcoded `theme="dark"`, added `zIndex: 99999`
+- Added `offset="80px"` to Toaster to clear mobile header + safe-area
+- Save button: 3 states — default (red) → "Saving..." (spinner) → "Saved" (green checkmark, 3s)
+- Inline success banner after save: green bar confirming "AI will use these settings"
+- Files: sonner.jsx, App.js, BrandSettings.js
+
 ## Backlog
 ### P1: Google OAuth, Email drip, A/B testing
 ### P2: Backend modularization (LLM fallback dedup), Platform publishing
