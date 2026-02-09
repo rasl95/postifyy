@@ -229,7 +229,7 @@ export const Dashboard = () => {
               <CardTitle className="text-white text-xl group-hover:text-[#FF3B30] transition-colors" style={{ fontFamily: 'Manrope, sans-serif' }}>
                 {language === 'ru' ? 'Посты' : 'Posts'}
               </CardTitle>
-              <CardDescription className="text-gray-500">
+              <CardDescription className="text-gray-400">
                 Instagram, TikTok, Telegram
               </CardDescription>
             </CardHeader>
@@ -253,7 +253,7 @@ export const Dashboard = () => {
               <CardTitle className="text-white text-xl group-hover:text-[#FF3B30] transition-colors" style={{ fontFamily: 'Manrope, sans-serif' }}>
                 {language === 'ru' ? 'Видео' : 'Video'}
               </CardTitle>
-              <CardDescription className="text-gray-500">
+              <CardDescription className="text-gray-400">
                 Reels, TikTok, Shorts
               </CardDescription>
             </CardHeader>
@@ -277,7 +277,7 @@ export const Dashboard = () => {
               <CardTitle className="text-white text-xl group-hover:text-[#FF3B30] transition-colors" style={{ fontFamily: 'Manrope, sans-serif' }}>
                 {language === 'ru' ? 'Продукт' : 'Product'}
               </CardTitle>
-              <CardDescription className="text-gray-500">
+              <CardDescription className="text-gray-400">
                 {language === 'ru' ? 'Продающие описания' : 'Sales descriptions'}
               </CardDescription>
             </CardHeader>
