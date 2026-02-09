@@ -993,6 +993,14 @@ export const ContentGenerator = () => {
         monthlyLimit={user?.monthly_limit || 3}
       />
 
+      {/* Share First Post Modal */}
+      <ShareFirstPostModal
+        isOpen={showShareFirstPost}
+        onClose={() => setShowShareFirstPost(false)}
+        generatedContent={result?.content}
+        contentType={activeTab}
+      />
+
       {/* Mobile Sticky Generate Button */}
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#0A0A0B] via-[#0A0A0B] to-transparent md:hidden z-30">
         <Button
