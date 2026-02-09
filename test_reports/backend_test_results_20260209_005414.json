@@ -1,0 +1,86 @@
+{
+  "timestamp": "2026-02-09T00:54:14.057118",
+  "base_url": "https://postify-ai-4.preview.emergentagent.com",
+  "tests_run": 11,
+  "tests_passed": 11,
+  "success_rate": "100.0%",
+  "results": [
+    {
+      "test": "User Registration",
+      "status": "PASSED",
+      "expected_status": 201,
+      "actual_status": 201,
+      "response_preview": "{'access_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RfNjMxMzJiZmZAZXhhbXBsZS5jb20iLCJleHAiOjE3NzA2ODQ4MzN9.DhXXz4fpemgC0n0cOc0v-La3iGigqLGQX00Ip8ztSjM', 'token_type': 'bearer', 'u..."
+    },
+    {
+      "test": "User Login",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'access_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RfNjMxMzJiZmZAZXhhbXBsZS5jb20iLCJleHAiOjE3NzA2ODQ4MzR9.adbhs_9iOokazMNQGXjdTGesCMhqC9r7thmJ4Hqa8Vc', 'token_type': 'bearer', 'u..."
+    },
+    {
+      "test": "Get User Profile (/auth/me)",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'email': 'test_63132bff@example.com', 'full_name': 'Test User', 'subscription_plan': 'free', 'monthly_limit': 3, 'current_usage': 0, 'stripe_customer_id': 'cus_Twbx4uFw3YZQdC', 'onboarding_completed'..."
+    },
+    {
+      "test": "Get Templates",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'templates': {'social_post': [{'id': 'product_promo', 'name': {'en': 'Product Promotion', 'ru': '\u041f\u0440\u043e\u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0435 \u043f\u0440\u043e\u0434\u0443\u043a\u0442\u0430'}, 'icon': '\ud83d\udecd\ufe0f', 'tone': 'selling', 'goal': 'sales', 'structure': 'Hook \u2192 Benefit..."
+    },
+    {
+      "test": "Generate Social Post",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'id': '187b0d0d-c297-4f02-9cff-3d9c9408c47d', 'generation_id': '187b0d0d-c297-4f02-9cff-3d9c9408c47d', 'content': \"Unlock your creative potential! \ud83d\ude80 Test new ideas with Postify AI and elevate your co..."
+    },
+    {
+      "test": "Generate AI Image",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'id': 'e7d8ad58-2181-401a-87f8-f1fd57950fd5', 'image_url': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABAAAAAQACAIAAADwf7zUAAF4qWNhQlgAAXipanVtYgAAAB5qdW1kYzJwYQARABCAAACqADibcQNjMnBhAAAANvFqdW1iA..."
+    },
+    {
+      "test": "Create Stripe Checkout Session",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'checkout_url': 'https://checkout.stripe.com/c/pay/cs_live_b1qfDLh17pPvTUMSQcDdWEFl8Y94nYYClLdZr3OKMFIKFFydYOW0WLuAv8#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blppbHNgWjA0VnJ1Mn1McmJwSzBzT2N..."
+    },
+    {
+      "test": "Save User Preferences",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'message': 'Preferences saved successfully', 'preferences': {'user_email': 'test_63132bff@example.com', 'content_goals': ['social_posts', 'ai_images'], 'platforms': ['instagram', 'tiktok'], 'business..."
+    },
+    {
+      "test": "Get User Preferences",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'preferences': {'user_email': 'test_63132bff@example.com', 'business_niche': 'marketing', 'content_goals': ['social_posts', 'ai_images'], 'platforms': ['instagram', 'tiktok'], 'preferred_tone': 'neut..."
+    },
+    {
+      "test": "Save Draft",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'saved': True, 'updated_at': '2026-02-09T00:54:13.999706+00:00'}"
+    },
+    {
+      "test": "Get Draft",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'draft': {'user_email': 'test_63132bff@example.com', 'draft_type': 'content', 'draft_data': {'content_type': 'social_post', 'topic': 'Test draft topic', 'tone': 'neutral'}, 'updated_at': '2026-02-09T..."
+    }
+  ]
+}
