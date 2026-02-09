@@ -201,7 +201,7 @@ export const DashboardLayout = () => {
 
       {/* Main Content */}
       <div className="md:ml-64 pt-16 md:pt-0 min-h-screen">
-        <div className="p-4 md:p-8">
+        <div className="p-4 md:p-8 pb-safe">
           <Outlet />
         </div>
       </div>
