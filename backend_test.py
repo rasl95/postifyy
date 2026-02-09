@@ -465,6 +465,7 @@ class PostifyAPITester:
             ("Stripe Checkout", self.test_stripe_checkout),
             ("User Preferences", self.test_user_preferences),
             ("Drafts Functionality", self.test_drafts_functionality),
+            ("Share First Post Functionality", self.test_share_first_post_functionality),
         ]
         
         failed_tests = []
