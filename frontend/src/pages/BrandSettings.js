@@ -500,6 +500,61 @@ export const BrandSettings = () => {
   const canGoNext = step === 0 ? profile.brand_name.trim().length > 0 : true;
   const isLastStep = step === 2;
 
+  // ─── Completion Screen ───
+  if (saved) {
+    const primaryColor = profile.primary_colors?.[0] || '#FF3B30';
+    return (
+      <div className="max-w-lg mx-auto mt-8 sm:mt-16 text-center" data-testid="brand-save-complete">
+        {/* Success icon */}
+        <div className="relative w-20 h-20 mx-auto mb-6">
+          <div
+            className="absolute inset-0 rounded-full opacity-20 animate-ping"
+            style={{ background: primaryColor }}
+          />
+          <div
+            className="relative w-20 h-20 rounded-full flex items-center justify-center"
+            style={{ background: `linear-gradient(135deg, ${primaryColor}, ${profile.primary_colors?.[1] || '#000'})` }}
+          >
+            <Check className="w-8 h-8 text-white" />
+          </div>
+        </div>
+
+        <h2 className="text-2xl font-bold text-white mb-2">
+          {language === 'ru' ? 'Бренд создан' : 'Brand created'}
+        </h2>
+        <p className="text-sm text-gray-400 mb-1">
+          <span className="text-white font-medium">{profile.brand_name}</span>
+          {profile.business_type && (
+            <span className="text-gray-500"> · {BUSINESS_TYPES.find(b => b.id === profile.business_type)?.label[language]}</span>
+          )}
+        </p>
+        <p className="text-sm text-gray-500 mb-8">
+          {language === 'ru' 
+            ? 'AI будет использовать эти настройки при генерации контента' 
+            : 'AI will use these settings when generating content'}
+        </p>
+
+        {/* CTA */}
+        <Button
+          className="bg-[#FF3B30] hover:bg-[#FF4D42] h-12 px-8 text-base"
+          onClick={() => navigate('/create')}
+          data-testid="brand-go-create-btn"
+        >
+          <Sparkles className="w-5 h-5 mr-2" />
+          {language === 'ru' ? 'Создать контент' : 'Generate content'}
+        </Button>
+
+        <button
+          onClick={() => { setSaved(false); setStep(0); }}
+          className="block mx-auto mt-4 text-sm text-gray-500 hover:text-gray-300 transition-colors"
+          data-testid="brand-edit-again-btn"
+        >
+          {language === 'ru' ? 'Изменить настройки' : 'Edit settings'}
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-2xl mx-auto">
       {/* Header */}
