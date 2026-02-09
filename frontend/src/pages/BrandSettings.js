@@ -399,6 +399,7 @@ const StepVisual = ({ profile, setProfile, language }) => {
 export const BrandSettings = () => {
   const { token, user } = useAuth();
   const { language } = useLanguage();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
