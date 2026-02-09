@@ -410,48 +410,54 @@ export const OnboardingWizard = ({ isOpen, onClose, onComplete }) => {
             </div>
           )}
 
-          {/* Step 5: Pro Upsell */}
+          {/* Step 5: Result Preview - "This is how your content will look" */}
           {step === 5 && (
             <div className="space-y-6 animate-in slide-in-from-right duration-300">
               <div className="text-center">
-                <div className="w-16 h-16 rounded-2xl bg-[#FF3B30]/15 border border-[#FF3B30]/30 flex items-center justify-center mx-auto mb-4">
-                  <Crown className="w-8 h-8 text-[#FF3B30]" />
+                <div className="w-16 h-16 rounded-2xl bg-green-500/15 border border-green-500/30 flex items-center justify-center mx-auto mb-4">
+                  <Check className="w-8 h-8 text-green-400" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
-                  {language === 'ru' ? 'Разблокируйте полный потенциал' : 'Unlock full potential'}
+                  {language === 'ru' ? 'Так будет выглядеть ваш контент' : 'This is how your content will look'}
                 </h3>
                 <p className="text-sm text-gray-400 max-w-sm mx-auto">
                   {language === 'ru' 
-                    ? 'С Pro вы получаете безлимитный AI-контент, кампании и аналитику'
-                    : 'With Pro you get unlimited AI content, campaigns, and analytics'}
+                    ? 'Postify AI адаптирует контент под ваши настройки'
+                    : 'Postify AI adapts content to your preferences'}
                 </p>
               </div>
               
-              <div className="grid grid-cols-1 gap-3 max-w-sm mx-auto">
-                {[
-                  { icon: Sparkles, text: language === 'ru' ? '100 генераций/мес' : '100 generations/mo' },
-                  { icon: Image, text: language === 'ru' ? '50 AI-изображений/мес' : '50 AI images/mo' },
-                  { icon: Target, text: language === 'ru' ? 'Маркетинг-кампании' : 'Marketing campaigns' },
-                  { icon: Rocket, text: language === 'ru' ? 'Аналитика и AI Director' : 'Analytics & AI Director' },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
-                    <item.icon className="w-5 h-5 text-[#FF3B30]" />
-                    <span className="text-sm text-white">{item.text}</span>
+              {/* Preview of what they configured */}
+              <div className="max-w-sm mx-auto space-y-3">
+                {preferences.platforms.length > 0 && (
+                  <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+                    <Sparkles className="w-5 h-5 text-[#FF3B30]" />
+                    <span className="text-sm text-white">
+                      {language === 'ru' ? 'Платформы: ' : 'Platforms: '}
+                      {preferences.platforms.join(', ')}
+                    </span>
                   </div>
-                ))}
+                )}
+                {preferences.business_niche && (
+                  <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/10">
+                    <Target className="w-5 h-5 text-[#FF3B30]" />
+                    <span className="text-sm text-white">
+                      {language === 'ru' ? 'Ниша: ' : 'Niche: '}{preferences.business_niche}
+                    </span>
+                  </div>
+                )}
+                {demoContent && (
+                  <div className="bg-[#0A0A0B] p-4 rounded-xl border border-[#FF3B30]/20 text-sm whitespace-pre-wrap text-gray-300 max-h-32 overflow-y-auto">
+                    {demoContent.slice(0, 200)}{demoContent.length > 200 ? '...' : ''}
+                  </div>
+                )}
               </div>
               
               <div className="flex flex-col gap-2 max-w-sm mx-auto">
-                <Button
-                  onClick={() => { handleComplete(); navigate('/pricing'); }}
-                  className="bg-[#FF3B30] hover:bg-[#FF4D42] text-white w-full shadow-lg shadow-[#FF3B30]/25"
-                  data-testid="onboarding-upgrade-btn"
-                >
-                  <Crown className="w-4 h-4 mr-2" />
-                  {language === 'ru' ? 'Попробовать Pro' : 'Try Pro'}
-                </Button>
                 <p className="text-xs text-gray-500 text-center">
-                  {language === 'ru' ? 'Или продолжите с бесплатным планом' : 'Or continue with Free plan'}
+                  {language === 'ru' 
+                    ? 'Вы можете создавать контент прямо сейчас — 3 генерации бесплатно'
+                    : 'You can start creating content now — 3 generations free'}
                 </p>
               </div>
             </div>
