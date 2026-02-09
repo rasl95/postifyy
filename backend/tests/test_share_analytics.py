@@ -11,7 +11,7 @@ import requests
 import os
 from datetime import datetime
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://postify-ai-3.preview.emergentagent.com')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://history-display-bug.preview.emergentagent.com')
 
 # Test credentials - Pro user with existing campaign that has share enabled
 TEST_EMAIL = "sharetest@test.com"

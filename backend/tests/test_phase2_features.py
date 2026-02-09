@@ -9,7 +9,7 @@ import os
 import time
 import uuid
 
-BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://postify-ai-3.preview.emergentagent.com')
+BASE_URL = os.environ.get('REACT_APP_BACKEND_URL', 'https://history-display-bug.preview.emergentagent.com')
 
 # Test credentials for Pro user
 PRO_USER_EMAIL = "phase2_1770307057@test.com"

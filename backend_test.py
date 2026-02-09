@@ -11,7 +11,7 @@ from datetime import datetime
 import uuid
 
 class PostifyAPITester:
-    def __init__(self, base_url="https://postify-ai-4.preview.emergentagent.com"):
+    def __init__(self, base_url="https://history-display-bug.preview.emergentagent.com"):
         self.base_url = base_url
         self.token = None
         self.test_user_email = f"test_{uuid.uuid4().hex[:8]}@example.com"
