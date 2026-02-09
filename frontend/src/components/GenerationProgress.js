@@ -4,10 +4,10 @@ import { useLanguage } from '../contexts/LanguageContext';
 
 const GENERATION_STAGES = {
   content: [
-    { id: 'analyzing', icon: Zap, label: { en: 'Analyzing request...', ru: 'Анализируем запрос...' }, duration: 1500 },
-    { id: 'generating', icon: Wand2, label: { en: 'Generating AI content...', ru: 'Генерируем AI контент...' }, duration: 3000 },
-    { id: 'optimizing', icon: Sparkles, label: { en: 'Optimizing for engagement...', ru: 'Оптимизируем для вовлечения...' }, duration: 2000 },
-    { id: 'finalizing', icon: Check, label: { en: 'Finalizing result...', ru: 'Финализируем результат...' }, duration: 1000 }
+    { id: 'analyzing', icon: Zap, label: { en: 'Analyzing request...', ru: 'Анализируем запрос...' }, duration: 600 },
+    { id: 'generating', icon: Wand2, label: { en: 'Generating AI content...', ru: 'Генерируем AI контент...' }, duration: 1200 },
+    { id: 'optimizing', icon: Sparkles, label: { en: 'Optimizing for engagement...', ru: 'Оптимизируем для вовлечения...' }, duration: 800 },
+    { id: 'finalizing', icon: Check, label: { en: 'Finalizing result...', ru: 'Финализируем результат...' }, duration: 400 }
   ],
   image: [
     { id: 'analyzing', icon: Zap, label: { en: 'Analyzing prompt...', ru: 'Анализируем запрос...' }, duration: 2000 },
