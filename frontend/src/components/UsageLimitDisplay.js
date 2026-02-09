@@ -108,7 +108,7 @@ export const UsageLimitDisplay = ({
               stroke="currentColor"
               strokeWidth="4"
               fill="none"
-              className="text-white/10"
+              className="text-white/20"
             />
             <circle
               cx="28"

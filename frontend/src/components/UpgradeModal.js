@@ -199,7 +199,7 @@ export const UpgradeModal = ({ isOpen, onClose, feature = null, trigger = 'featu
           <button onClick={goToPricing} className="text-sm text-gray-500 hover:text-white transition-colors" data-testid="upgrade-compare-plans-btn">
             {language === 'ru' ? 'Сравнить все планы' : 'Compare all plans'} →
           </button>
-          <p className="text-xs text-gray-600">
+          <p className="text-xs text-gray-500">
             {language === 'ru' ? 'Отмена в любое время · Безопасная оплата' : 'Cancel anytime · Secure payment'}
           </p>
         </div>

@@ -150,7 +150,7 @@ export const CreditBundleModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* Footer */}
-        <p className="text-xs text-center text-gray-600 pt-2">
+        <p className="text-xs text-center text-gray-500 pt-2">
           {language === 'ru' ? 'Безопасная оплата через Stripe' : 'Secure payment via Stripe'}
         </p>
       </DialogContent>
