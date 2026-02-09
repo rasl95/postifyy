@@ -134,7 +134,8 @@ export const DashboardLayout = () => {
         transform transition-transform duration-300 ease-in-out
         md:translate-x-0 md:top-0
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
-      `} style={{ top: window.innerWidth < 768 ? 'calc(4rem + env(safe-area-inset-top, 0px))' : undefined }}>
+      `} style={{ '--mobile-top': 'calc(4rem + env(safe-area-inset-top, 0px))' }}>
+        <style>{`@media (max-width: 767px) { [style*="--mobile-top"] { top: var(--mobile-top) !important; } }`}</style>
         <div className="flex flex-col h-full">
           {/* Logo - Desktop Only */}
           <div className="hidden md:flex p-6 border-b border-white/10 justify-between items-center">
