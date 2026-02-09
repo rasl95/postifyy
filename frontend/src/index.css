@@ -341,3 +341,40 @@ code {
     background-clip: text;
 }
 
+/* ========================================
+   GLOBAL CONTRAST & SAFE-AREA FIXES
+   ======================================== */
+
+/* Fix gray-600 and below to meet WCAG AA on dark bg */
+.dark .text-gray-600 { color: rgba(255, 255, 255, 0.45) !important; }
+.dark .text-gray-700 { color: rgba(255, 255, 255, 0.35) !important; }
+.dark .text-gray-800 { color: rgba(255, 255, 255, 0.25) !important; }
+
+/* Standardize card appearance */
+.card-standard {
+    background: #111113;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 0.75rem;
+}
+
+/* Mobile safe area for fixed bottom elements */
+.pb-safe { padding-bottom: max(env(safe-area-inset-bottom, 0px), 0.5rem); }
+.pt-safe { padding-top: max(env(safe-area-inset-top, 0px), 0px); }
+
+/* Mobile bottom bar safe area */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+    .safe-bottom-fixed {
+        padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.75rem);
+    }
+}
+
+/* Consistent section spacing */
+.section-gap { margin-bottom: 1.5rem; }
+.section-gap-lg { margin-bottom: 2rem; }
+
+/* Prevent content touching edges on mobile */
+@media (max-width: 640px) {
+    .mobile-px { padding-left: 1rem; padding-right: 1rem; }
+}
+
+
