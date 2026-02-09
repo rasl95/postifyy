@@ -417,7 +417,7 @@ export const PricingPage = () => {
                       row.free ? (
                         <Check className="w-5 h-5 text-green-500 mx-auto" />
                       ) : (
-                        <X className="w-5 h-5 text-gray-600 mx-auto" />
+                        <X className="w-5 h-5 text-gray-500 mx-auto" />
                       )
                     ) : (
                       <span className="text-gray-300 text-sm">{row.free}</span>
@@ -428,7 +428,7 @@ export const PricingPage = () => {
                       row.pro ? (
                         <Check className="w-5 h-5 text-[#FF3B30] mx-auto" />
                       ) : (
-                        <X className="w-5 h-5 text-gray-600 mx-auto" />
+                        <X className="w-5 h-5 text-gray-500 mx-auto" />
                       )
                     ) : (
                       <span className="text-[#FF3B30] text-sm font-medium">{row.pro}</span>
@@ -439,7 +439,7 @@ export const PricingPage = () => {
                       row.business ? (
                         <Check className="w-5 h-5 text-purple-400 mx-auto" />
                       ) : (
-                        <X className="w-5 h-5 text-gray-600 mx-auto" />
+                        <X className="w-5 h-5 text-gray-500 mx-auto" />
                       )
                     ) : (
                       <span className="text-purple-400 text-sm font-medium">{row.business}</span>

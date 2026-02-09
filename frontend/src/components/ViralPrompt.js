@@ -99,7 +99,7 @@ export const ViralPromptBanner = () => {
       <div className="bg-[#111113] border border-[#FF3B30]/30 rounded-2xl p-4 shadow-2xl shadow-[#FF3B30]/10">
         <button
           onClick={dismiss}
-          className="absolute top-3 right-3 text-gray-600 hover:text-white p-1"
+          className="absolute top-3 right-3 text-gray-500 hover:text-white p-1"
           data-testid="viral-dismiss-btn"
         >
           <X className="w-4 h-4" />
