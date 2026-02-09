@@ -11,10 +11,16 @@ import { useNavigate } from 'react-router-dom';
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
 export const Settings = () => {
-  const { user, token } = useAuth();
+  const { user, token, logout } = useAuth();
   const { t, language } = useLanguage();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [portalLoading, setPortalLoading] = useState(false);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   const handleUpgrade = async (plan) => {
     if (plan === 'free') {
