@@ -61,6 +61,14 @@ Import from GitHub https://github.com/rasl95/Postify-ai.git — AI content gener
 - Added CSS utility classes for mobile header offset (sidebar, overlay, main content)
 - Added `!important` to background-color on html/body/#root to prevent overrides
 
+### Global Text Contrast Pass #2 (Feb 9)
+- Upgraded all `text-gray-600` → `text-gray-500` across 16 occurrences in 8 files
+- Upgraded `text-gray-700` → `text-gray-500` (icons in empty states)
+- Upgraded `opacity-30` → `opacity-50` for placeholder icons in ImageGenerator
+- Upgraded `text-white/10` → `text-white/20` for usage limit display ring
+- Boosted global CSS safety-net: `.dark .text-gray-600` from 0.45 → 0.5, `.dark .text-gray-700` from 0.35 → 0.4
+- Files: History.js, Landing.js, SharedCampaign.js, MarketingCampaigns.js, ImageGenerator.js, UpgradeModal.js, CreditBundleModal.js, ExitIntentPopup.js, ShareFirstPostModal.js, UsageLimitDisplay.js, index.css
+
 ## Backlog
 ### P1: Google OAuth, Email drip, A/B testing
 ### P2: Backend modularization (LLM fallback dedup), Platform publishing
