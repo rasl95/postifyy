@@ -269,6 +269,17 @@ export const Settings = () => {
             <span className="text-gray-500">{language === 'ru' ? 'Имя' : 'Name'}</span>
             <span className="font-medium text-white">{user?.full_name || (language === 'ru' ? 'Не указано' : 'Not set')}</span>
           </div>
+          <div className="pt-4 mt-2 border-t border-white/5">
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-red-500/10"
+              onClick={handleLogout}
+              data-testid="logout-btn"
+            >
+              <LogOut className="w-4 h-4 mr-2" />
+              {language === 'ru' ? 'Выйти из аккаунта' : 'Log out'}
+            </Button>
+          </div>
         </CardContent>
       </Card>
     </div>
