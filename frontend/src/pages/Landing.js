@@ -406,7 +406,7 @@ Try applying at least one of these today.
               <div className="space-y-3">
                 {t.freeMiss.free.map((item, i) => (
                   <div key={i} className="flex items-center gap-3 text-gray-400 text-sm">
-                    <X className="w-4 h-4 text-gray-600 flex-shrink-0" />
+                    <X className="w-4 h-4 text-gray-500 flex-shrink-0" />
                     <span>{item}</span>
                   </div>
                 ))}

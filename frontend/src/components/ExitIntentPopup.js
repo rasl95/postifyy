@@ -85,7 +85,7 @@ export const ExitIntentPopup = () => {
             </Button>
             <button
               onClick={() => setShow(false)}
-              className="text-xs text-gray-600 hover:text-gray-400 transition-colors"
+              className="text-xs text-gray-500 hover:text-gray-300 transition-colors"
             >
               {language === 'ru' ? 'Нет, спасибо' : 'No, thanks'}
             </button>

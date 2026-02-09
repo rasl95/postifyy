@@ -80,7 +80,7 @@ export const SharedCampaign = () => {
       <div className="min-h-screen bg-[#0B0B0D] flex items-center justify-center p-4">
         <Card className="bg-white/5 border-white/10 max-w-md w-full" data-testid="shared-campaign-error">
           <CardContent className="py-12 text-center">
-            <Target className="w-12 h-12 mx-auto mb-4 text-gray-600" />
+            <Target className="w-12 h-12 mx-auto mb-4 text-gray-500" />
             <h2 className="text-xl font-semibold text-white mb-2">
               {error === 'not_found' ? 'Кампания не найдена' : 'Ошибка загрузки'}
             </h2>
@@ -277,7 +277,7 @@ export const SharedCampaign = () => {
             ) : (
               <Card className="bg-white/5 border-white/10">
                 <CardContent className="py-12 text-center">
-                  <Sparkles className="w-10 h-10 mx-auto mb-3 text-gray-600" />
+                  <Sparkles className="w-10 h-10 mx-auto mb-3 text-gray-500" />
                   <p className="text-gray-400">Контент ещё не сгенерирован</p>
                 </CardContent>
               </Card>

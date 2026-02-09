@@ -767,7 +767,7 @@ export const MarketingCampaigns = () => {
           {campaigns.length === 0 ? (
             <Card className="col-span-full bg-white/5 border-white/10 border-dashed">
               <CardContent className="py-16 text-center">
-                <Target className="w-16 h-16 mx-auto mb-4 text-gray-600" />
+                <Target className="w-16 h-16 mx-auto mb-4 text-gray-500" />
                 <h3 className="text-xl font-medium text-white mb-2">{t.noCampaigns}</h3>
                 <p className="text-gray-400 mb-6">{t.noCampaignsDesc}</p>
                 <Button 
@@ -1063,7 +1063,7 @@ export const MarketingCampaigns = () => {
                             );
                           })}
                         </div>
-                        <div className="flex justify-between text-[10px] text-gray-600">
+                        <div className="flex justify-between text-[10px] text-gray-500">
                           <span>{shareStats.daily_views[0]?.date?.slice(5)}</span>
                           <span>{language === 'ru' ? 'Сегодня' : 'Today'}</span>
                         </div>
