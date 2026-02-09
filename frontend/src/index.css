@@ -77,29 +77,32 @@ code {
         @apply border-border;
     }
     
-    /* iOS Safari safe-area fix */
+    /* iOS Safari safe-area & overscroll fix */
     html {
-        background-color: #0B0B0D;
+        background-color: #0B0B0D !important;
+        color-scheme: dark;
         min-height: 100%;
         min-height: 100svh;
         min-height: -webkit-fill-available;
+        overscroll-behavior-y: none;
     }
     
     body {
         @apply bg-background text-foreground;
-        background-color: #0B0B0D;
+        background-color: #0B0B0D !important;
         min-height: 100%;
         min-height: 100svh;
         min-height: -webkit-fill-available;
         padding-bottom: env(safe-area-inset-bottom);
         padding-left: env(safe-area-inset-left);
         padding-right: env(safe-area-inset-right);
+        overscroll-behavior-y: none;
     }
     
     #root {
         min-height: 100svh;
         min-height: -webkit-fill-available;
-        background-color: #0B0B0D;
+        background-color: #0B0B0D !important;
     }
 }
 
