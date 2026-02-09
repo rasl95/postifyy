@@ -91,7 +91,7 @@ export const Dashboard = () => {
               <span className="text-gray-400 text-sm font-medium">{language === 'ru' ? 'Ваш баланс' : 'Your balance'}</span>
               <div className="flex items-center gap-1 text-[#FF3B30]">
                 <Zap className="w-4 h-4" />
-                <span className="text-xs font-semibold">{isPro ? 'Pro' : 'Free'}</span>
+                <span className="text-xs font-semibold">{user?.subscription_plan === 'business' ? 'Business' : isPro ? 'Pro' : 'Free'}</span>
               </div>
             </div>
             <div className="text-6xl font-black text-white mb-3 tracking-tight">
