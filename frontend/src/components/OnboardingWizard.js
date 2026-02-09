@@ -510,15 +510,15 @@ export const OnboardingWizard = ({ isOpen, onClose, onComplete }) => {
               <Button
                 onClick={handleComplete}
                 disabled={saving}
-                className="bg-white/10 hover:bg-white/20 text-white px-6"
+                className="bg-[#FF3B30] hover:bg-[#FF4D42] text-white px-6"
                 data-testid="onboarding-finish-btn"
               >
                 {saving ? (
                   <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
                 ) : (
-                  <Check className="w-4 h-4 mr-2" />
+                  <Rocket className="w-4 h-4 mr-2" />
                 )}
-                {language === 'ru' ? 'Начать бесплатно' : 'Start free'}
+                {language === 'ru' ? 'Начать создавать' : 'Start creating'}
               </Button>
             )}
           </div>
