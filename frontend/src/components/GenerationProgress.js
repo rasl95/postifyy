@@ -26,51 +26,93 @@ export const GenerationProgress = ({
   const { language } = useLanguage();
   const [currentStage, setCurrentStage] = useState(0);
   const [progress, setProgress] = useState(0);
+  const [visible, setVisible] = useState(false);
+  const [apiDone, setApiDone] = useState(false);
 
   const stages = GENERATION_STAGES[type] || GENERATION_STAGES.content;
   const filteredStages = showBrandStep ? stages : stages.filter(s => s.id !== 'brand');
+  const totalStages = filteredStages.length;
 
-  // Reset state when loading changes
   useEffect(() => {
-    if (!isLoading) {
+    if (isLoading) {
+      // Start showing
+      setVisible(true);
+      setApiDone(false);
       setCurrentStage(0);
       setProgress(0);
-      return;
+    } else if (visible) {
+      // API is done but keep animating until all stages shown
+      setApiDone(true);
     }
+  }, [isLoading, visible]);
 
+  // Stage progression timer
+  useEffect(() => {
+    if (!visible) return;
+
+    let stageIdx = 0;
     setCurrentStage(0);
     setProgress(0);
 
-    // Build stage boundaries as cumulative percentages
     const totalDuration = filteredStages.reduce((sum, s) => sum + s.duration, 0);
     const stageBoundaries = [];
-    let cumulative = 0;
+    let cum = 0;
     for (const s of filteredStages) {
-      cumulative += s.duration;
-      stageBoundaries.push((cumulative / totalDuration) * 100);
+      cum += s.duration;
+      stageBoundaries.push((cum / totalDuration) * 100);
     }
 
-    let progressValue = 0;
-    const tickMs = 80;
-    const increment = 95 / (totalDuration / tickMs);
+    let progressVal = 0;
+    const tickMs = 60;
+    const maxProgress = 95;
+    const increment = maxProgress / (totalDuration / tickMs);
 
     const interval = setInterval(() => {
-      progressValue = Math.min(progressValue + increment, 95);
-      setProgress(progressValue);
+      progressVal = Math.min(progressVal + increment, maxProgress);
+      setProgress(progressVal);
 
-      // Find current stage based on progress vs boundaries
+      // Find current stage
       for (let i = 0; i < stageBoundaries.length; i++) {
-        if (progressValue < stageBoundaries[i]) {
-          setCurrentStage(i);
+        if (progressVal < stageBoundaries[i]) {
+          if (stageIdx !== i) {
+            stageIdx = i;
+            setCurrentStage(i);
+          }
           break;
         }
       }
     }, tickMs);
 
     return () => clearInterval(interval);
-  }, [isLoading, filteredStages]);
+  }, [visible, filteredStages]);
 
-  if (!isLoading) return null;
+  // When API is done, fast-forward remaining stages then hide
+  useEffect(() => {
+    if (!apiDone || !visible) return;
+
+    // Fast-forward: move through remaining stages quickly
+    let idx = currentStage;
+    const fastForward = setInterval(() => {
+      idx++;
+      if (idx >= totalStages) {
+        clearInterval(fastForward);
+        setProgress(100);
+        // Small delay before hiding to show 100%
+        setTimeout(() => setVisible(false), 300);
+      } else {
+        setCurrentStage(idx);
+        // Jump progress proportionally
+        const totalDuration = filteredStages.reduce((sum, s) => sum + s.duration, 0);
+        let cum = 0;
+        for (let i = 0; i <= idx; i++) cum += filteredStages[i].duration;
+        setProgress(Math.min((cum / totalDuration) * 100, 95));
+      }
+    }, 350);
+
+    return () => clearInterval(fastForward);
+  }, [apiDone, visible, currentStage, totalStages, filteredStages]);
+
+  if (!visible) return null;
 
   const CurrentIcon = filteredStages[currentStage]?.icon || Loader2;
   const currentLabel = filteredStages[currentStage]?.label || { en: 'Processing...', ru: 'Обработка...' };
