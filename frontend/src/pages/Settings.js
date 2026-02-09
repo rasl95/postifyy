@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Check, CreditCard, ExternalLink, Loader2, Settings as SettingsIcon, Zap, User } from 'lucide-react';
+import { Check, CreditCard, ExternalLink, Loader2, Settings as SettingsIcon, Zap, User, LogOut } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 const API_URL = process.env.REACT_APP_BACKEND_URL;
 
