@@ -290,10 +290,10 @@ export const PricingPage = () => {
             </div>
 
             <Button
-              className={`w-full py-6 ${currentPlan === 'pro'
+              className={`w-full py-6 ${getPlanStatus('pro') !== 'upgrade'
                 ? 'bg-white/5 text-gray-400 border border-white/10 cursor-default'
                 : 'bg-[#FF3B30] hover:bg-[#FF4D42] text-white shadow-lg shadow-[#FF3B30]/30'}`}
-              disabled={loadingPlan === 'pro' || currentPlan === 'pro' || checkoutLoading}
+              disabled={loadingPlan === 'pro' || getPlanStatus('pro') !== 'upgrade' || checkoutLoading}
               onClick={() => handleUpgrade('pro')}
               data-testid="pricing-pro-btn"
             >
@@ -302,8 +302,10 @@ export const PricingPage = () => {
                   <Clock className="w-4 h-4 animate-spin" />
                   {language === 'ru' ? 'Загрузка...' : 'Loading...'}
                 </span>
-              ) : currentPlan === 'pro' ? (
+              ) : getPlanStatus('pro') === 'current' ? (
                 language === 'ru' ? 'Текущий план' : 'Current Plan'
+              ) : getPlanStatus('pro') === 'included' ? (
+                language === 'ru' ? 'Включено' : 'Included'
               ) : (
                 <>
                   {language === 'ru' ? 'Перейти на Pro' : 'Upgrade to Pro'}
