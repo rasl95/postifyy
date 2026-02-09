@@ -69,6 +69,13 @@ Import from GitHub https://github.com/rasl95/Postify-ai.git — AI content gener
 - Boosted global CSS safety-net: `.dark .text-gray-600` from 0.45 → 0.5, `.dark .text-gray-700` from 0.35 → 0.4
 - Files: History.js, Landing.js, SharedCampaign.js, MarketingCampaigns.js, ImageGenerator.js, UpgradeModal.js, CreditBundleModal.js, ExitIntentPopup.js, ShareFirstPostModal.js, UsageLimitDisplay.js, index.css
 
+### Pricing Plan Hierarchy Fix (Feb 9)
+- Plans below current show "Включено/Included" badge with disabled button
+- Current plan shows "Текущий план/Current Plan" badge
+- Only higher plans show upgrade button
+- Business card no longer has `opacity-90` when it's the current plan
+- `handleUpgrade` blocks downgrade attempts
+
 ## Backlog
 ### P1: Google OAuth, Email drip, A/B testing
 ### P2: Backend modularization (LLM fallback dedup), Platform publishing
