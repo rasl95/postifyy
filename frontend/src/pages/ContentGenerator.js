@@ -486,505 +486,334 @@ export const ContentGenerator = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8 pb-24 md:pb-8">
+    <div className="max-w-2xl mx-auto space-y-5 pb-24 md:pb-8">
       {/* Generation Progress Overlay */}
       <GenerationProgress isLoading={loading} type="content" />
 
-      {/* Header with Usage */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+      {/* Header — compact */}
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold text-white mb-2" style={{ fontFamily: 'Manrope, sans-serif' }}>
+          <h1 className="text-2xl font-semibold text-white tracking-tight">
             {language === 'ru' ? 'Создать контент' : 'Create Content'}
           </h1>
-          <p className="text-gray-400" style={{ fontFamily: 'Inter, sans-serif' }}>
-            {language === 'ru' ? 'AI-генерация для ваших соцсетей' : 'AI generation for your social media'}
+          <p className="text-sm text-gray-500 mt-0.5">
+            {remaining} {language === 'ru' ? 'генераций осталось' : 'generations left'}
+            {!isPro && (
+              <button onClick={() => navigate('/pricing')} className="text-[#FF3B30] ml-2 hover:underline">
+                {language === 'ru' ? 'Улучшить' : 'Upgrade'}
+              </button>
+            )}
           </p>
         </div>
-        
-        {/* Usage Progress */}
-        <div className="bg-gradient-to-br from-[#1A1A1C] to-[#111113] rounded-2xl p-5 border border-white/10 min-w-[280px]">
-          <div className="flex items-center justify-between mb-3">
-            <span className="text-sm text-gray-400">{language === 'ru' ? 'Использовано' : 'Used'}</span>
-            <span className="text-sm font-medium text-white">
-              {user?.current_usage || 0} / {user?.monthly_limit || 3}
-            </span>
-          </div>
-          <Progress value={usagePercent} className="h-2 mb-3" />
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 text-xs text-gray-500">
-              <Zap className="w-3 h-3 text-[#FF3B30]" />
-              <span>
-                {language === 'ru' 
-                  ? `Осталось ${remaining} генераций`
-                  : `${remaining} generations left`
-                }
-              </span>
-              {!isPro && (
-                <>
-                  <span className="text-gray-500">·</span>
-                  <button 
-                    onClick={() => window.location.href = '/settings'}
-                    className="text-[#FF3B30] hover:underline flex items-center gap-1"
-                  >
-                    {language === 'ru' ? 'Разблокировать' : 'Unlock full access'}
-                    <ArrowRight className="w-3 h-3" />
-                  </button>
-                </>
-              )}
-            </div>
-            {/* Autosave indicator */}
-            <AutosaveIndicator isSaving={isSaving} lastSaved={lastSaved} language={language} />
-          </div>
+        {/* Language toggle — inline */}
+        <div className="flex gap-1 bg-white/[0.04] rounded-lg p-0.5">
+          <button
+            onClick={() => setOutputLanguage('ru')}
+            className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-all ${
+              outputLanguage === 'ru' ? 'bg-[#FF3B30] text-white' : 'text-gray-500 hover:text-white'
+            }`}
+          >RU</button>
+          <button
+            onClick={() => setOutputLanguage('en')}
+            className={`px-2.5 py-1.5 rounded-md text-xs font-medium transition-all ${
+              outputLanguage === 'en' ? 'bg-[#FF3B30] text-white' : 'text-gray-500 hover:text-white'
+            }`}
+          >EN</button>
         </div>
       </div>
 
-      {/* Main Card */}
-      <Card className="bg-gradient-to-br from-[#131315] to-[#0D0D0F] border-white/10 overflow-hidden">
-        {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={(v) => { setActiveTab(v); setResult(null); }} className="w-full">
-          <div className="border-b border-white/10 px-6 pt-6">
-            <TabsList className="bg-transparent border-none gap-2 p-0 h-auto">
-              {tabs.map((tab) => (
-                <TabsTrigger
-                  key={tab.id}
-                  value={tab.id}
-                  className={`
-                    flex items-center gap-2 px-5 py-3 rounded-t-xl border-b-2 transition-all
-                    data-[state=active]:bg-[#1A1A1C] data-[state=active]:border-[#FF3B30] data-[state=active]:text-white
-                    data-[state=inactive]:border-transparent data-[state=inactive]:text-gray-500 data-[state=inactive]:hover:text-gray-300
-                  `}
-                >
-                  <tab.icon className="w-4 h-4" />
-                  <span className="font-medium">{tab.label}</span>
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </div>
+      {/* 3 Goal Tabs — primary focus */}
+      <Tabs value={activeTab} onValueChange={(v) => { setActiveTab(v); setResult(null); }}>
+        <TabsList className="bg-[#111113] border border-white/[0.06] p-1 rounded-xl h-12 w-full">
+          {tabs.map((tab) => (
+            <TabsTrigger
+              key={tab.id}
+              value={tab.id}
+              className="flex-1 flex items-center justify-center gap-2 rounded-lg text-sm data-[state=active]:bg-[#FF3B30] data-[state=active]:text-white data-[state=inactive]:text-gray-500"
+            >
+              <tab.icon className="w-4 h-4" />
+              <span className="font-medium">{tab.label}</span>
+            </TabsTrigger>
+          ))}
+        </TabsList>
 
-          <CardContent className="p-6 md:p-8 space-y-6">
-            {/* Language Selector */}
-            <div className="flex items-center justify-between p-4 bg-[#0A0A0B] rounded-xl border border-white/5">
-              <div className="flex items-center gap-3">
-                <Globe className="w-5 h-5 text-[#FF3B30]" />
-                <span className="text-sm text-gray-300">
-                  {language === 'ru' ? 'Язык результата' : 'Output language'}
-                </span>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={() => setOutputLanguage('ru')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    outputLanguage === 'ru' 
-                      ? 'bg-[#FF3B30] text-white' 
-                      : 'bg-white/5 text-gray-400 hover:bg-white/10'
-                  }`}
-                >
-                  🇷🇺 RU
-                </button>
-                <button
-                  onClick={() => setOutputLanguage('en')}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    outputLanguage === 'en' 
-                      ? 'bg-[#FF3B30] text-white' 
-                      : 'bg-white/5 text-gray-400 hover:bg-white/10'
-                  }`}
-                >
-                  🇬🇧 EN
-                </button>
-              </div>
+        {/* Form — no Card wrapper, just clean fields */}
+        <div className="space-y-4 mt-5">
+          {/* Autosave indicator */}
+          <AutosaveIndicator isSaving={isSaving} lastSaved={lastSaved} language={language} />
+
+          {/* Social Post Form */}
+          <TabsContent value="social_post" className="space-y-4 mt-0">
+            <div>
+              <Input
+                placeholder={language === 'ru' ? 'О чём пост? *' : 'What is the post about? *'}
+                value={formData.topic}
+                onChange={(e) => setFormData({ ...formData, topic: e.target.value })}
+                className="bg-[#111113] border-white/[0.06] text-white h-12 text-base"
+                data-testid="topic-input"
+              />
             </div>
 
-            {/* Quick Templates - Using PresetTemplates component */}
-            <PresetTemplates 
-              contentType={activeTab}
-              onSelect={handleTemplateSelect}
-              selectedId={selectedTemplate}
-              compact={false}
-            />
+            <div className="grid grid-cols-2 gap-3">
+              <Select value={formData.platform} onValueChange={(v) => setFormData({ ...formData, platform: v })}>
+                <SelectTrigger className="bg-[#111113] border-white/[0.06] text-white h-11">
+                  <SelectValue placeholder={language === 'ru' ? 'Платформа' : 'Platform'} />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1A1A1C] border-white/10">
+                  <SelectItem value="instagram" className="text-white">Instagram</SelectItem>
+                  <SelectItem value="tiktok" className="text-white">TikTok</SelectItem>
+                  <SelectItem value="telegram" className="text-white">Telegram</SelectItem>
+                </SelectContent>
+              </Select>
 
-            {/* Social Post Form */}
-            <TabsContent value="social_post" className="space-y-5 mt-0">
-              <div>
-                <Label className="text-gray-300 text-sm mb-2 block">
-                  {language === 'ru' ? 'О чём пост?' : 'What is the post about?'} *
-                </Label>
-                <Input
-                  placeholder={language === 'ru' ? 'Например: запуск нового продукта' : 'E.g.: new product launch'}
-                  value={formData.topic}
-                  onChange={(e) => setFormData({ ...formData, topic: e.target.value })}
-                  className="bg-[#0A0A0B] border-white/10 text-white h-12 text-base"
-                />
-              </div>
+              <Select value={formData.tone} onValueChange={(v) => setFormData({ ...formData, tone: v })}>
+                <SelectTrigger className="bg-[#111113] border-white/[0.06] text-white h-11">
+                  <SelectValue placeholder={language === 'ru' ? 'Тон' : 'Tone'} />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1A1A1C] border-white/10">
+                  {allTones.map(tone => (
+                    <SelectItem key={tone.value} value={tone.value} className="text-white">{tone.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                  <Label className="text-gray-300 text-sm mb-2 block">{language === 'ru' ? 'Платформа' : 'Platform'}</Label>
-                  <Select value={formData.platform} onValueChange={(v) => setFormData({ ...formData, platform: v })}>
-                    <SelectTrigger className="bg-[#0A0A0B] border-white/10 text-white h-12">
-                      <SelectValue />
+            {/* Collapsible extras */}
+            <details className="group">
+              <summary className="text-xs text-gray-600 cursor-pointer hover:text-gray-400 transition-colors list-none flex items-center gap-1.5">
+                <ArrowRight className="w-3 h-3 transition-transform group-open:rotate-90" />
+                {language === 'ru' ? 'Ещё настройки' : 'More options'}
+              </summary>
+              <div className="space-y-3 mt-3">
+                {isPro && (
+                  <Select value={formData.post_goal} onValueChange={(v) => setFormData({ ...formData, post_goal: v })}>
+                    <SelectTrigger className="bg-[#111113] border-white/[0.06] text-white h-11">
+                      <SelectValue placeholder={t('postGoals.label')} />
                     </SelectTrigger>
                     <SelectContent className="bg-[#1A1A1C] border-white/10">
-                      <SelectItem value="instagram" className="text-white">Instagram</SelectItem>
-                      <SelectItem value="tiktok" className="text-white">TikTok</SelectItem>
-                      <SelectItem value="telegram" className="text-white">Telegram</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                <div>
-                  <Label className="text-gray-300 text-sm mb-2 block">{language === 'ru' ? 'Тон' : 'Tone'}</Label>
-                  <Select value={formData.tone} onValueChange={(v) => setFormData({ ...formData, tone: v })}>
-                    <SelectTrigger className="bg-[#0A0A0B] border-white/10 text-white h-12">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-[#1A1A1C] border-white/10">
-                      {allTones.map(tone => (
-                        <SelectItem key={tone.value} value={tone.value} className="text-white">{tone.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              {/* Post Goal - Pro Feature */}
-              <div>
-                <div className="flex items-center gap-2 mb-2">
-                  <Label className="text-gray-300 text-sm">{t('postGoals.label')}</Label>
-                  {!isPro && (
-                    <span className="flex items-center gap-1 text-xs text-[#FF3B30] bg-[#FF3B30]/10 px-2 py-0.5 rounded-full">
-                      <Lock className="w-3 h-3" /> Pro
-                    </span>
-                  )}
-                </div>
-                <Select 
-                  value={formData.post_goal} 
-                  onValueChange={(v) => setFormData({ ...formData, post_goal: v })}
-                  disabled={!isPro}
-                >
-                  <SelectTrigger className={`bg-[#0A0A0B] border-white/10 text-white h-12 ${!isPro ? 'opacity-50' : ''}`}>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-[#1A1A1C] border-white/10">
-                    {postGoals.map(goal => (
-                      <SelectItem key={goal.value} value={goal.value} className="text-white">{goal.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label className="text-gray-300 text-sm mb-2 block">
-                  {language === 'ru' ? 'Целевая аудитория' : 'Target audience'} 
-                  <span className="text-gray-500 ml-1">({language === 'ru' ? 'опционально' : 'optional'})</span>
-                </Label>
-                <Input
-                  placeholder={language === 'ru' ? 'Например: предприниматели 25-40 лет' : 'E.g.: entrepreneurs 25-40'}
-                  value={formData.target_audience}
-                  onChange={(e) => setFormData({ ...formData, target_audience: e.target.value })}
-                  className="bg-[#0A0A0B] border-white/10 text-white h-12"
-                />
-              </div>
-            </TabsContent>
-
-            {/* Video Ideas Form */}
-            <TabsContent value="video_idea" className="space-y-5 mt-0">
-              <div>
-                <Label className="text-gray-300 text-sm mb-2 block">
-                  {language === 'ru' ? 'Ниша или тема' : 'Niche or topic'} *
-                </Label>
-                <Input
-                  placeholder={language === 'ru' ? 'Например: фитнес, кулинария, бизнес' : 'E.g.: fitness, cooking, business'}
-                  value={formData.niche}
-                  onChange={(e) => setFormData({ ...formData, niche: e.target.value })}
-                  className="bg-[#0A0A0B] border-white/10 text-white h-12 text-base"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                  <Label className="text-gray-300 text-sm mb-2 block">{language === 'ru' ? 'Цель видео' : 'Video goal'}</Label>
-                  <Select value={formData.video_goal} onValueChange={(v) => setFormData({ ...formData, video_goal: v })}>
-                    <SelectTrigger className="bg-[#0A0A0B] border-white/10 text-white h-12">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-[#1A1A1C] border-white/10">
-                      {videoGoals.map(goal => (
+                      {postGoals.map(goal => (
                         <SelectItem key={goal.value} value={goal.value} className="text-white">{goal.label}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
-                </div>
-
-                <div>
-                  <Label className="text-gray-300 text-sm mb-2 block">{language === 'ru' ? 'Тон' : 'Tone'}</Label>
-                  <Select value={formData.tone} onValueChange={(v) => setFormData({ ...formData, tone: v })}>
-                    <SelectTrigger className="bg-[#0A0A0B] border-white/10 text-white h-12">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-[#1A1A1C] border-white/10">
-                      {allTones.map(tone => (
-                        <SelectItem key={tone.value} value={tone.value} className="text-white">{tone.label}</SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
-
-              <div>
-                <Label className="text-gray-300 text-sm mb-2 block">
-                  {language === 'ru' ? 'Целевая аудитория' : 'Target audience'} 
-                  <span className="text-gray-500 ml-1">({language === 'ru' ? 'опционально' : 'optional'})</span>
-                </Label>
+                )}
                 <Input
-                  placeholder={language === 'ru' ? 'Например: начинающие блогеры' : 'E.g.: beginner bloggers'}
+                  placeholder={language === 'ru' ? 'Целевая аудитория (опционально)' : 'Target audience (optional)'}
                   value={formData.target_audience}
                   onChange={(e) => setFormData({ ...formData, target_audience: e.target.value })}
-                  className="bg-[#0A0A0B] border-white/10 text-white h-12"
+                  className="bg-[#111113] border-white/[0.06] text-white h-11"
                 />
               </div>
-            </TabsContent>
+            </details>
+          </TabsContent>
 
-            {/* Product Description Form */}
-            <TabsContent value="product_description" className="space-y-5 mt-0">
-              <div>
-                <Label className="text-gray-300 text-sm mb-2 block">
-                  {language === 'ru' ? 'Название продукта' : 'Product name'} *
-                </Label>
+          {/* Video Ideas Form */}
+          <TabsContent value="video_idea" className="space-y-4 mt-0">
+            <Input
+              placeholder={language === 'ru' ? 'Ниша или тема *' : 'Niche or topic *'}
+              value={formData.niche}
+              onChange={(e) => setFormData({ ...formData, niche: e.target.value })}
+              className="bg-[#111113] border-white/[0.06] text-white h-12 text-base"
+              data-testid="niche-input"
+            />
+            <div className="grid grid-cols-2 gap-3">
+              <Select value={formData.video_goal} onValueChange={(v) => setFormData({ ...formData, video_goal: v })}>
+                <SelectTrigger className="bg-[#111113] border-white/[0.06] text-white h-11">
+                  <SelectValue placeholder={language === 'ru' ? 'Цель' : 'Goal'} />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1A1A1C] border-white/10">
+                  {videoGoals.map(goal => (
+                    <SelectItem key={goal.value} value={goal.value} className="text-white">{goal.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={formData.tone} onValueChange={(v) => setFormData({ ...formData, tone: v })}>
+                <SelectTrigger className="bg-[#111113] border-white/[0.06] text-white h-11">
+                  <SelectValue placeholder={language === 'ru' ? 'Тон' : 'Tone'} />
+                </SelectTrigger>
+                <SelectContent className="bg-[#1A1A1C] border-white/10">
+                  {allTones.map(tone => (
+                    <SelectItem key={tone.value} value={tone.value} className="text-white">{tone.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <details className="group">
+              <summary className="text-xs text-gray-600 cursor-pointer hover:text-gray-400 transition-colors list-none flex items-center gap-1.5">
+                <ArrowRight className="w-3 h-3 transition-transform group-open:rotate-90" />
+                {language === 'ru' ? 'Ещё настройки' : 'More options'}
+              </summary>
+              <div className="mt-3">
                 <Input
-                  placeholder={language === 'ru' ? 'Например: Умные часы FitMax Pro' : 'E.g.: FitMax Pro Smartwatch'}
-                  value={formData.product_name}
-                  onChange={(e) => setFormData({ ...formData, product_name: e.target.value })}
-                  className="bg-[#0A0A0B] border-white/10 text-white h-12 text-base"
-                />
-              </div>
-
-              <div>
-                <Label className="text-gray-300 text-sm mb-2 block">{language === 'ru' ? 'Тон описания' : 'Description tone'}</Label>
-                <Select value={formData.tone} onValueChange={(v) => setFormData({ ...formData, tone: v })}>
-                  <SelectTrigger className="bg-[#0A0A0B] border-white/10 text-white h-12">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-[#1A1A1C] border-white/10">
-                    {allTones.map(tone => (
-                      <SelectItem key={tone.value} value={tone.value} className="text-white">{tone.label}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div>
-                <Label className="text-gray-300 text-sm mb-2 block">
-                  {language === 'ru' ? 'Целевой клиент' : 'Target customer'} 
-                  <span className="text-gray-500 ml-1">({language === 'ru' ? 'опционально' : 'optional'})</span>
-                </Label>
-                <Input
-                  placeholder={language === 'ru' ? 'Например: активные люди 25-45 лет' : 'E.g.: active people 25-45'}
+                  placeholder={language === 'ru' ? 'Целевая аудитория (опционально)' : 'Target audience (optional)'}
                   value={formData.target_audience}
                   onChange={(e) => setFormData({ ...formData, target_audience: e.target.value })}
-                  className="bg-[#0A0A0B] border-white/10 text-white h-12"
+                  className="bg-[#111113] border-white/[0.06] text-white h-11"
                 />
               </div>
+            </details>
+          </TabsContent>
 
-              <div>
-                <Label className="text-gray-300 text-sm mb-2 block">
-                  {language === 'ru' ? 'Ключевые преимущества' : 'Key benefits'} 
-                  <span className="text-gray-500 ml-1">({language === 'ru' ? 'опционально' : 'optional'})</span>
-                </Label>
+          {/* Product Description Form */}
+          <TabsContent value="product_description" className="space-y-4 mt-0">
+            <Input
+              placeholder={language === 'ru' ? 'Название продукта *' : 'Product name *'}
+              value={formData.product_name}
+              onChange={(e) => setFormData({ ...formData, product_name: e.target.value })}
+              className="bg-[#111113] border-white/[0.06] text-white h-12 text-base"
+              data-testid="product-input"
+            />
+            <Select value={formData.tone} onValueChange={(v) => setFormData({ ...formData, tone: v })}>
+              <SelectTrigger className="bg-[#111113] border-white/[0.06] text-white h-11">
+                <SelectValue placeholder={language === 'ru' ? 'Тон описания' : 'Description tone'} />
+              </SelectTrigger>
+              <SelectContent className="bg-[#1A1A1C] border-white/10">
+                {allTones.map(tone => (
+                  <SelectItem key={tone.value} value={tone.value} className="text-white">{tone.label}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <details className="group">
+              <summary className="text-xs text-gray-600 cursor-pointer hover:text-gray-400 transition-colors list-none flex items-center gap-1.5">
+                <ArrowRight className="w-3 h-3 transition-transform group-open:rotate-90" />
+                {language === 'ru' ? 'Ещё настройки' : 'More options'}
+              </summary>
+              <div className="space-y-3 mt-3">
+                <Input
+                  placeholder={language === 'ru' ? 'Целевой клиент (опционально)' : 'Target customer (optional)'}
+                  value={formData.target_audience}
+                  onChange={(e) => setFormData({ ...formData, target_audience: e.target.value })}
+                  className="bg-[#111113] border-white/[0.06] text-white h-11"
+                />
                 <Textarea
-                  placeholder={language === 'ru' ? 'Например: долгая батарея, водонепроницаемость, точный GPS' : 'E.g.: long battery, waterproof, accurate GPS'}
+                  placeholder={language === 'ru' ? 'Ключевые преимущества (опционально)' : 'Key benefits (optional)'}
                   value={formData.key_benefits}
                   onChange={(e) => setFormData({ ...formData, key_benefits: e.target.value })}
-                  className="bg-[#0A0A0B] border-white/10 text-white min-h-[80px]"
+                  className="bg-[#111113] border-white/[0.06] text-white min-h-[72px] resize-none"
                 />
               </div>
-            </TabsContent>
+            </details>
+          </TabsContent>
 
-            {/* Generate Button */}
-            <Button
-              onClick={() => handleGenerate()}
-              disabled={loading || (user && user.current_usage >= user.monthly_limit)}
-              className="w-full h-14 bg-gradient-to-r from-[#FF3B30] to-[#FF5545] hover:from-[#FF4D42] hover:to-[#FF6655] text-white font-bold text-lg shadow-lg shadow-[#FF3B30]/30 disabled:opacity-50 transition-all"
-              data-testid="desktop-generate-btn"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                  {isBusiness ? t('priority.processing') : (language === 'ru' ? 'Генерация...' : 'Generating...')}
-                </>
-              ) : (
-                <>
-                  {isBusiness && <Rocket className="w-5 h-5 mr-2" />}
-                  {currentTab?.generateLabel}
-                  {isBusiness && (
-                    <span className="ml-2 text-xs bg-white/20 px-2 py-0.5 rounded-full">
-                      {t('priority.badge')}
-                    </span>
-                  )}
-                </>
-              )}
-            </Button>
+          {/* Generate Button — desktop */}
+          <Button
+            onClick={() => handleGenerate()}
+            disabled={loading || (user && user.current_usage >= user.monthly_limit)}
+            className="w-full h-14 bg-[#FF3B30] hover:bg-[#FF4D42] text-white font-semibold text-base shadow-lg shadow-[#FF3B30]/20 hidden md:flex"
+            data-testid="desktop-generate-btn"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                {language === 'ru' ? 'Создаём...' : 'Creating...'}
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-5 h-5 mr-2" />
+                {currentTab?.generateLabel}
+              </>
+            )}
+          </Button>
+        </div>
+      </Tabs>
 
-            {/* Trust Badges */}
-            <div className="flex flex-wrap items-center justify-center gap-6 pt-2 text-xs text-gray-500">
-              <span className="flex items-center gap-1.5">
-                <Zap className="w-3.5 h-3.5 text-[#FF3B30]" />
-                {t('trust.fastGeneration')}
+      {/* Templates — collapsed section */}
+      {!result && (
+        <details className="group">
+          <summary className="flex items-center justify-between cursor-pointer py-2">
+            <span className="text-sm text-gray-500 flex items-center gap-2">
+              <Wand2 className="w-3.5 h-3.5" />
+              {language === 'ru' ? 'Шаблоны для быстрого старта' : 'Quick start templates'}
+            </span>
+            <ArrowRight className="w-3.5 h-3.5 text-gray-600 transition-transform group-open:rotate-90" />
+          </summary>
+          <div className="grid grid-cols-2 gap-2 mt-3">
+            {(templates[activeTab] || []).map((tmpl) => (
+              <button
+                key={tmpl.id}
+                onClick={() => applyTemplate(tmpl)}
+                className="text-left p-3 rounded-xl bg-[#111113] border border-white/[0.06] hover:border-white/15 transition-colors"
+              >
+                <span className="text-sm mb-0.5 block">{tmpl.icon} {tmpl.label}</span>
+                <span className="text-[11px] text-gray-600">{tmpl.desc}</span>
+              </button>
+            ))}
+          </div>
+        </details>
+      )}
+
+      {/* Result */}
+      {result && (
+        <div className="space-y-4">
+          {/* Result header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-4 h-4 text-[#FF3B30]" />
+              <span className="text-sm font-medium text-white">
+                {language === 'ru' ? 'Результат' : 'Result'}
               </span>
-              <span className="flex items-center gap-1.5">
-                <Shield className="w-3.5 h-3.5 text-green-500" />
-                {t('trust.noStorage')}
-              </span>
-              {isBusiness && (
-                <span className="flex items-center gap-1.5 text-purple-400">
-                  <Rocket className="w-3.5 h-3.5" />
-                  {t('priority.enhanced')}
-                </span>
+              {result.meta?.platform && (
+                <span className="text-xs text-gray-600">{getPlatformLabel(result.meta.platform)}</span>
               )}
             </div>
-          </CardContent>
-        </Tabs>
-      </Card>
-
-      {/* Result Card */}
-      {result && (
-        <Card className="bg-gradient-to-br from-[#131315] to-[#0D0D0F] border-white/10 overflow-hidden">
-          {/* Result Header with Context */}
-          <div className="p-6 border-b border-white/10">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#FF3B30]/10 flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-[#FF3B30]" />
-                </div>
-                <div>
-                  <h3 className="text-lg font-semibold text-white flex items-center gap-2">
-                    {language === 'ru' ? 'Результат' : 'Result'}
-                    {result.priority_processed && (
-                      <span className="flex items-center gap-1 text-xs bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full">
-                        <Rocket className="w-3 h-3" />
-                        {t('priority.processed')}
-                      </span>
-                    )}
-                  </h3>
-                  {/* Context Tags */}
-                  <div className="flex flex-wrap items-center gap-2 mt-1 text-xs text-gray-500">
-                    {result.meta?.platform && (
-                      <span className="bg-white/5 px-2 py-1 rounded">{getPlatformLabel(result.meta.platform)}</span>
-                    )}
-                    <span className="bg-white/5 px-2 py-1 rounded">{getToneLabel(result.meta?.tone || formData.tone)}</span>
-                    {getGoalLabel(result.meta?.goal) && (
-                      <span className="bg-white/5 px-2 py-1 rounded">{getGoalLabel(result.meta.goal)}</span>
-                    )}
-                    <span className="bg-white/5 px-2 py-1 rounded">{outputLanguage === 'ru' ? '🇷🇺 RU' : '🇬🇧 EN'}</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={toggleFavorite}
-                  disabled={favoriteLoading || !isPro}
-                  className={`${isFavorite ? 'text-yellow-500' : 'text-gray-400'} hover:bg-white/10`}
-                  title={isPro ? (isFavorite ? t('favorites.removeFromFavorites') : t('favorites.addToFavorites')) : t('favorites.proOnly')}
-                  data-testid="result-favorite-btn"
-                >
-                  {favoriteLoading ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Star className={`w-4 h-4 ${isFavorite ? 'fill-yellow-500' : ''}`} />
-                  )}
-                  {!isPro && <Lock className="w-3 h-3 ml-1" />}
-                </Button>
-                
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={copyToClipboard}
-                  className="border-white/20 text-white hover:bg-white/10"
-                  data-testid="result-copy-btn"
-                >
-                  {copied ? <Check className="w-4 h-4 mr-2 text-green-500" /> : <Copy className="w-4 h-4 mr-2" />}
-                  {copied ? (language === 'ru' ? 'Скопировано' : 'Copied') : t('generator.copy')}
-                </Button>
-                
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={handleShare}
-                  className="border-white/20 text-white hover:bg-white/10"
-                  data-testid="result-share-btn"
-                >
-                  <Share2 className="w-4 h-4 mr-2" />
-                  {language === 'ru' ? 'Поделиться' : 'Share'}
-                </Button>
-              </div>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={toggleFavorite}
+                disabled={favoriteLoading || !isPro}
+                className={`p-2 rounded-lg hover:bg-white/5 transition-colors ${isFavorite ? 'text-yellow-500' : 'text-gray-500'}`}
+                data-testid="result-favorite-btn"
+              >
+                <Star className={`w-4 h-4 ${isFavorite ? 'fill-yellow-500' : ''}`} />
+              </button>
+              <button
+                onClick={handleShare}
+                className="p-2 rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition-colors"
+                data-testid="result-share-btn"
+              >
+                <Share2 className="w-4 h-4" />
+              </button>
+              <button
+                onClick={copyToClipboard}
+                className="p-2 rounded-lg text-gray-500 hover:text-white hover:bg-white/5 transition-colors"
+                data-testid="result-copy-btn"
+              >
+                {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+              </button>
             </div>
           </div>
 
-          {/* Result Content */}
-          <CardContent className="p-6">
-            <div className="bg-[#0A0A0B] p-6 rounded-xl border border-white/5 whitespace-pre-wrap text-gray-200 leading-relaxed text-base" style={{ fontFamily: 'Inter, sans-serif' }}>
-              {result.content}
-              {result.watermark && (
-                <div className="mt-4 pt-3 border-t border-white/10 text-xs text-gray-500 italic" data-testid="watermark-text">
-                  {language === 'ru' ? 'Создано с помощью Postify AI' : 'Created with Postify AI'}
-                </div>
-              )}
-            </div>
+          {/* Content */}
+          <div className="bg-[#111113] border border-white/[0.06] rounded-xl p-5 whitespace-pre-wrap text-gray-200 leading-relaxed text-sm">
+            {result.content}
+            {result.watermark && (
+              <div className="mt-4 pt-3 border-t border-white/[0.04] text-xs text-gray-600 italic" data-testid="watermark-text">
+                {language === 'ru' ? 'Создано с помощью Postify AI' : 'Created with Postify AI'}
+              </div>
+            )}
+          </div>
 
-            {/* Quick Actions */}
-            <div className="flex flex-wrap gap-3 mt-6">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleGenerate(true)}
-                disabled={loading}
-                className="border-white/20 text-gray-300 hover:bg-white/10 hover:text-white"
-              >
-                <RefreshCw className="w-4 h-4 mr-2" />
-                {language === 'ru' ? 'Перегенерировать' : 'Regenerate'}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleGenerate(true)}
-                disabled={loading}
-                className="border-white/20 text-gray-300 hover:bg-white/10 hover:text-white"
-              >
-                <Wand2 className="w-4 h-4 mr-2" />
-                {language === 'ru' ? 'Улучшить' : 'Improve'}
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => handleGenerate(true, 'selling')}
-                disabled={loading}
-                className="border-white/20 text-gray-300 hover:bg-white/10 hover:text-white"
-              >
-                <Target className="w-4 h-4 mr-2" />
-                {language === 'ru' ? 'Сделать продающим' : 'Make it sell'}
-              </Button>
-              <Button
-                variant="default"
-                size="sm"
-                onClick={() => navigate(`/images?prompt=${encodeURIComponent(formData.topic || result.content?.slice(0, 100))}`)}
-                className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white"
-                data-testid="generate-brand-image-btn"
-              >
-                <Image className="w-4 h-4 mr-2" />
-                {language === 'ru' ? 'Создать изображение' : 'Generate Brand Image'}
-              </Button>
-            </div>
+          {/* Quick actions — compact */}
+          <div className="flex flex-wrap gap-2">
+            <button onClick={() => handleGenerate(true)} disabled={loading}
+              className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-white px-3 py-2 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] transition-colors">
+              <RefreshCw className="w-3 h-3" /> {language === 'ru' ? 'Перегенерировать' : 'Regenerate'}
+            </button>
+            <button onClick={() => handleGenerate(true, 'selling')} disabled={loading}
+              className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-white px-3 py-2 rounded-lg bg-white/[0.03] hover:bg-white/[0.06] transition-colors">
+              <Target className="w-3 h-3" /> {language === 'ru' ? 'Продающий' : 'Make it sell'}
+            </button>
+            <button onClick={() => navigate(`/images?prompt=${encodeURIComponent(formData.topic || result.content?.slice(0, 100))}`)}
+              className="flex items-center gap-1.5 text-xs text-[#FF3B30] hover:text-white px-3 py-2 rounded-lg bg-[#FF3B30]/5 hover:bg-[#FF3B30]/10 transition-colors"
+              data-testid="generate-brand-image-btn">
+              <Image className="w-3 h-3" /> {language === 'ru' ? 'Создать изображение' : 'Generate image'}
+            </button>
+          </div>
 
-            {/* Meta info */}
-            <div className="flex justify-between mt-4 text-sm text-gray-500">
-              <span>{language === 'ru' ? 'Токенов' : 'Tokens'}: {result.tokens_used}</span>
-              <span>{language === 'ru' ? 'Осталось' : 'Remaining'}: {result.remaining_usage}</span>
-            </div>
-          </CardContent>
-        </Card>
+          {/* Meta */}
+          <p className="text-[11px] text-gray-600">
+            {result.tokens_used} tokens · {result.remaining_usage} {language === 'ru' ? 'осталось' : 'remaining'}
+          </p>
+        </div>
       )}
 
       <LimitReachedModal
@@ -994,7 +823,6 @@ export const ContentGenerator = () => {
         monthlyLimit={user?.monthly_limit || 3}
       />
 
-      {/* Share First Post Modal */}
       <ShareFirstPostModal
         isOpen={showShareFirstPost}
         onClose={() => setShowShareFirstPost(false)}
@@ -1004,11 +832,11 @@ export const ContentGenerator = () => {
       />
 
       {/* Mobile Sticky Generate Button */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#0A0A0B] via-[#0A0A0B] to-transparent md:hidden z-30">
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-[#0A0A0B] via-[#0A0A0B] to-transparent md:hidden z-30" style={{ paddingBottom: 'calc(1rem + env(safe-area-inset-bottom, 0px))' }}>
         <Button
-          className="w-full bg-gradient-to-r from-[#FF3B30] to-[#FF6B47] hover:from-[#E62D22] hover:to-[#FF5534] text-white py-6 text-lg font-semibold rounded-2xl shadow-lg shadow-[#FF3B30]/30"
+          className="w-full bg-[#FF3B30] hover:bg-[#FF4D42] text-white h-13 text-base font-semibold rounded-xl shadow-lg shadow-[#FF3B30]/20"
           onClick={() => handleGenerate()}
-          disabled={loading || !formData.topic.trim()}
+          disabled={loading}
           data-testid="mobile-generate-btn"
         >
           {loading ? (
@@ -1019,7 +847,7 @@ export const ContentGenerator = () => {
           ) : (
             <>
               <Sparkles className="w-5 h-5 mr-2" />
-              {tabs.find(t => t.id === activeTab)?.generateLabel}
+              {currentTab?.generateLabel}
             </>
           )}
         </Button>
