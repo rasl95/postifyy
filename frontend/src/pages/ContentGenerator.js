@@ -513,7 +513,7 @@ export const ContentGenerator = () => {
                     onClick={() => window.location.href = '/settings'}
                     className="text-[#FF3B30] hover:underline flex items-center gap-1"
                   >
-                    Pro {language === 'ru' ? 'без ограничений' : 'unlimited'}
+                    {language === 'ru' ? 'Разблокировать' : 'Unlock full access'}
                     <ArrowRight className="w-3 h-3" />
                   </button>
                 </>
