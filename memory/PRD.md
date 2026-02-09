@@ -54,6 +54,13 @@ Import from GitHub https://github.com/rasl95/Postify-ai.git — AI content gener
 - Root cause: Frontend fetched `response.data.images` but backend returns `response.data.items`
 - Fix: Changed `History.js` line 282 to use `.items` key
 
+### iOS White Strips Fix (Feb 9)
+- Added `color-scheme: dark` to CSS + HTML meta tag to force dark overscroll areas
+- Added `overscroll-behavior-y: none` to prevent iOS bounce showing white background
+- Fixed mobile header: `box-sizing: content-box` so safe-area padding expands header height
+- Added CSS utility classes for mobile header offset (sidebar, overlay, main content)
+- Added `!important` to background-color on html/body/#root to prevent overrides
+
 ## Backlog
 ### P1: Google OAuth, Email drip, A/B testing
 ### P2: Backend modularization (LLM fallback dedup), Platform publishing
