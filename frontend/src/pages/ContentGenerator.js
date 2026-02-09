@@ -675,7 +675,7 @@ export const ContentGenerator = () => {
               <div>
                 <Label className="text-gray-300 text-sm mb-2 block">
                   {language === 'ru' ? 'Целевая аудитория' : 'Target audience'} 
-                  <span className="text-gray-600 ml-1">({language === 'ru' ? 'опционально' : 'optional'})</span>
+                  <span className="text-gray-500 ml-1">({language === 'ru' ? 'опционально' : 'optional'})</span>
                 </Label>
                 <Input
                   placeholder={language === 'ru' ? 'Например: предприниматели 25-40 лет' : 'E.g.: entrepreneurs 25-40'}
@@ -733,7 +733,7 @@ export const ContentGenerator = () => {
               <div>
                 <Label className="text-gray-300 text-sm mb-2 block">
                   {language === 'ru' ? 'Целевая аудитория' : 'Target audience'} 
-                  <span className="text-gray-600 ml-1">({language === 'ru' ? 'опционально' : 'optional'})</span>
+                  <span className="text-gray-500 ml-1">({language === 'ru' ? 'опционально' : 'optional'})</span>
                 </Label>
                 <Input
                   placeholder={language === 'ru' ? 'Например: начинающие блогеры' : 'E.g.: beginner bloggers'}
@@ -775,7 +775,7 @@ export const ContentGenerator = () => {
               <div>
                 <Label className="text-gray-300 text-sm mb-2 block">
                   {language === 'ru' ? 'Целевой клиент' : 'Target customer'} 
-                  <span className="text-gray-600 ml-1">({language === 'ru' ? 'опционально' : 'optional'})</span>
+                  <span className="text-gray-500 ml-1">({language === 'ru' ? 'опционально' : 'optional'})</span>
                 </Label>
                 <Input
                   placeholder={language === 'ru' ? 'Например: активные люди 25-45 лет' : 'E.g.: active people 25-45'}
@@ -788,7 +788,7 @@ export const ContentGenerator = () => {
               <div>
                 <Label className="text-gray-300 text-sm mb-2 block">
                   {language === 'ru' ? 'Ключевые преимущества' : 'Key benefits'} 
-                  <span className="text-gray-600 ml-1">({language === 'ru' ? 'опционально' : 'optional'})</span>
+                  <span className="text-gray-500 ml-1">({language === 'ru' ? 'опционально' : 'optional'})</span>
                 </Label>
                 <Textarea
                   placeholder={language === 'ru' ? 'Например: долгая батарея, водонепроницаемость, точный GPS' : 'E.g.: long battery, waterproof, accurate GPS'}
@@ -979,7 +979,7 @@ export const ContentGenerator = () => {
             </div>
 
             {/* Meta info */}
-            <div className="flex justify-between mt-4 text-sm text-gray-600">
+            <div className="flex justify-between mt-4 text-sm text-gray-500">
               <span>{language === 'ru' ? 'Токенов' : 'Tokens'}: {result.tokens_used}</span>
               <span>{language === 'ru' ? 'Осталось' : 'Remaining'}: {result.remaining_usage}</span>
             </div>
