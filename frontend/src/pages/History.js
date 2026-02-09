@@ -279,7 +279,7 @@ export const History = () => {
       const response = await axios.get(`${API_URL}/api/image-history?limit=50`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      setImageHistory(response.data.images || []);
+      setImageHistory(response.data.items || []);
     } catch (error) {
       console.error('Failed to fetch image history:', error);
     }
