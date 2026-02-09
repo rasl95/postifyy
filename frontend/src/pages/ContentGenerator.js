@@ -804,6 +804,7 @@ export const ContentGenerator = () => {
               onClick={() => handleGenerate()}
               disabled={loading || (user && user.current_usage >= user.monthly_limit)}
               className="w-full h-14 bg-gradient-to-r from-[#FF3B30] to-[#FF5545] hover:from-[#FF4D42] hover:to-[#FF6655] text-white font-bold text-lg shadow-lg shadow-[#FF3B30]/30 disabled:opacity-50 transition-all"
+              data-testid="desktop-generate-btn"
             >
               {loading ? (
                 <>
