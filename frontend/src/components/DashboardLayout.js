@@ -151,7 +151,7 @@ export const DashboardLayout = () => {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 p-4 space-y-1 md:mt-0 mt-4">
+          <nav className="flex-1 p-4 space-y-1 md:mt-0 mt-4 overflow-y-auto">
             {navItems.map((item) => (
               <NavLink
                 key={item.path}
