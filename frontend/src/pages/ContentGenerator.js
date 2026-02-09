@@ -1000,6 +1000,7 @@ export const ContentGenerator = () => {
         onClose={() => setShowShareFirstPost(false)}
         generatedContent={result?.content}
         contentType={activeTab}
+        generationId={result?.id}
       />
 
       {/* Mobile Sticky Generate Button */}
