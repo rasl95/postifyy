@@ -192,7 +192,7 @@ export const DashboardLayout = () => {
               <div className="text-sm font-medium text-white truncate">{user?.email}</div>
               <div className="text-xs text-gray-400 capitalize mt-1 flex items-center gap-2">
                 <span className={`w-2 h-2 rounded-full ${user?.subscription_plan === 'pro' || user?.subscription_plan === 'business' ? 'bg-[#FF3B30]' : 'bg-gray-500'}`} />
-                {user?.subscription_plan || 'Free'} Plan
+                {(user?.subscription_plan || 'free').charAt(0).toUpperCase() + (user?.subscription_plan || 'free').slice(1)} Plan
               </div>
             </div>
           </div>
