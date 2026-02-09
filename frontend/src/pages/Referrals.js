@@ -141,7 +141,7 @@ export const Referrals = () => {
             <Button
               onClick={shareLink}
               variant="outline"
-              className="flex-1"
+              className="flex-1 border-white/20 text-white hover:bg-white/10"
               data-testid="share-referral-btn"
             >
               <Share2 className="w-4 h-4 mr-2" />
