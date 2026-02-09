@@ -76,7 +76,7 @@ function App() {
           <BrowserRouter>
             <AppRouter />
           </BrowserRouter>
-          <Toaster position="top-center" />
+          <Toaster position="top-center" offset="80px" duration={3000} />
         </PricingProvider>
       </AuthProvider>
     </LanguageProvider>
