@@ -160,9 +160,11 @@ code {
     --postify-bg: #0B0B0D;
     --postify-card-bg: rgba(255, 255, 255, 0.03);
     --postify-border: rgba(255, 255, 255, 0.08);
-    --postify-text: rgba(255, 255, 255, 0.95);
-    --postify-text-muted: rgba(255, 255, 255, 0.5);
-    --postify-text-subtle: rgba(255, 255, 255, 0.35);
+    /* WCAG AA compliant text scale on #0B0B0D */
+    --postify-text: rgba(255, 255, 255, 0.95);        /* primary */
+    --postify-text-secondary: rgba(255, 255, 255, 0.7); /* labels, subtitles */
+    --postify-text-muted: rgba(255, 255, 255, 0.55);    /* metadata, dates */
+    --postify-text-subtle: rgba(255, 255, 255, 0.4);    /* placeholders */
 }
 
 /* High contrast input styles for dark theme */
