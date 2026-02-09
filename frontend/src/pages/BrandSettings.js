@@ -607,11 +607,7 @@ export const BrandSettings = () => {
 
                 {isLastStep ? (
                   <Button
-                    className={`h-10 px-5 transition-all ${
-                      saved 
-                        ? 'bg-emerald-600 hover:bg-emerald-600 text-white' 
-                        : 'bg-[#FF3B30] hover:bg-[#FF4D42]'
-                    }`}
+                    className="bg-[#FF3B30] hover:bg-[#FF4D42] h-10 px-5"
                     onClick={handleSave}
                     disabled={saving}
                     data-testid="save-brand-btn"
@@ -620,11 +616,6 @@ export const BrandSettings = () => {
                       <>
                         <Loader2 className="w-4 h-4 animate-spin mr-2" />
                         {language === 'ru' ? 'Сохраняем...' : 'Saving...'}
-                      </>
-                    ) : saved ? (
-                      <>
-                        <Check className="w-4 h-4 mr-2" />
-                        {language === 'ru' ? 'Сохранено' : 'Saved'}
                       </>
                     ) : (
                       <>
