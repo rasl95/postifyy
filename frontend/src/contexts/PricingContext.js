@@ -262,6 +262,7 @@ export const PricingProvider = ({ children }) => {
     // Usage
     getUsageStats,
     isCreditsLow,
+    isCreditsCritical,
     isCreditsExhausted,
     
     // Modals
