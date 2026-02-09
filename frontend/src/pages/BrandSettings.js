@@ -400,6 +400,7 @@ export const BrandSettings = () => {
   const { language } = useLanguage();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
   const [hasAccess, setHasAccess] = useState(false);
   const [step, setStep] = useState(0);
 
