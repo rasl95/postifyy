@@ -1353,20 +1353,38 @@ Sample content for {request.content_type}:
 #MockContent #TestMode"""
             tokens_used = 150
         elif use_emergent_llm:
-            # Use Emergent LLM integration
-            logger.info(f"Calling Emergent LLM API: model=gpt-4o-mini, priority={is_business}")
-            session_id = f"gen_{current_user['email']}_{uuid.uuid4().hex[:8]}"
-            
-            chat = LlmChat(
-                api_key=emergent_llm_key,
-                session_id=session_id,
-                system_message=system_prompt
-            ).with_model("openai", "gpt-4o-mini")
-            
-            user_message = UserMessage(text=user_prompt)
-            generated_content = await chat.send_message(user_message)
-            tokens_used = len(generated_content.split()) * 2  # Estimate tokens
-            logger.info(f"Emergent LLM response received: ~{tokens_used} tokens")
+            # Use Emergent LLM integration with fallback to direct OpenAI
+            try:
+                logger.info(f"Calling Emergent LLM API: model=gpt-4o-mini, priority={is_business}")
+                session_id = f"gen_{current_user['email']}_{uuid.uuid4().hex[:8]}"
+                
+                chat = LlmChat(
+                    api_key=emergent_llm_key,
+                    session_id=session_id,
+                    system_message=system_prompt
+                ).with_model("openai", "gpt-4o-mini")
+                
+                user_message = UserMessage(text=user_prompt)
+                generated_content = await chat.send_message(user_message)
+                tokens_used = len(generated_content.split()) * 2
+                logger.info(f"Emergent LLM response received: ~{tokens_used} tokens")
+            except Exception as emergent_err:
+                logger.warning(f"Emergent LLM failed: {emergent_err}, falling back to direct OpenAI")
+                if openai_client:
+                    response = openai_client.chat.completions.create(
+                        model="gpt-4o-mini",
+                        messages=[
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": user_prompt}
+                        ],
+                        max_tokens=max_tokens,
+                        temperature=0.8
+                    )
+                    generated_content = response.choices[0].message.content
+                    tokens_used = response.usage.total_tokens
+                    logger.info(f"OpenAI fallback response: {tokens_used} tokens")
+                else:
+                    raise emergent_err
         else:
             # Call OpenAI directly with plan-based token limit
             logger.info(f"Calling OpenAI API: model=gpt-4o-mini, max_tokens={max_tokens}, priority={is_business}")
