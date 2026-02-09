@@ -44,6 +44,7 @@ export const ContentGenerator = () => {
   const [showLimitModal, setShowLimitModal] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
   const [favoriteLoading, setFavoriteLoading] = useState(false);
+  const [showShareFirstPost, setShowShareFirstPost] = useState(false);
   const [outputLanguage, setOutputLanguage] = useState(language);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
   
