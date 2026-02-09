@@ -49,9 +49,14 @@ Import from GitHub https://github.com/rasl95/Postify-ai.git — AI content gener
 - Card backgrounds: #111113
 - Same text scale across all pages
 
+### Image History Display Fix (Feb 9)
+- Fixed bug: generated images not appearing in History page
+- Root cause: Frontend fetched `response.data.images` but backend returns `response.data.items`
+- Fix: Changed `History.js` line 282 to use `.items` key
+
 ## Backlog
 ### P1: Google OAuth, Email drip, A/B testing
-### P2: Backend modularization, Platform publishing
+### P2: Backend modularization (LLM fallback dedup), Platform publishing
 
 ---
 *Last updated: February 9, 2026*
