@@ -667,7 +667,7 @@ export const ImageGenerator = () => {
                   </div>
                 ) : (
                   <div className="h-64 flex flex-col items-center justify-center text-gray-500 bg-[#0A0A0B] rounded-xl border border-white/5">
-                    <Image className="w-12 h-12 mb-3 opacity-30" />
+                    <Image className="w-12 h-12 mb-3 opacity-50" />
                     <p className="text-sm">{language === 'ru' ? 'Здесь появится изображение' : 'Image will appear here'}</p>
                   </div>
                 )}
@@ -805,7 +805,7 @@ export const ImageGenerator = () => {
                   </div>
                 ) : (
                   <div className="h-64 flex flex-col items-center justify-center text-gray-500">
-                    <Layers className="w-12 h-12 mb-3 opacity-30" />
+                    <Layers className="w-12 h-12 mb-3 opacity-50" />
                     <p className="text-sm">{language === 'ru' ? 'Результаты появятся здесь' : 'Results will appear here'}</p>
                   </div>
                 )}
@@ -830,7 +830,7 @@ export const ImageGenerator = () => {
             </div>
           ) : history.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
-              <Image className="w-10 h-10 mx-auto mb-2 opacity-30" />
+              <Image className="w-10 h-10 mx-auto mb-2 opacity-50" />
               <p>{language === 'ru' ? 'Пока нет изображений' : 'No images yet'}</p>
             </div>
           ) : (
