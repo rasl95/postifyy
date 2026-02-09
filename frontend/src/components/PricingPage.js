@@ -103,12 +103,12 @@ export const PricingPage = () => {
       {/* Header */}
       <div className="text-center space-y-4">
         <h1 className="text-3xl md:text-4xl font-bold text-white" style={{ fontFamily: 'Manrope, sans-serif' }}>
-          {language === 'ru' ? 'Простые и честные цены' : 'Simple and honest pricing'}
+          {language === 'ru' ? 'Один план — полный контроль' : 'One plan — full control'}
         </h1>
         <p className="text-gray-400 text-lg max-w-2xl mx-auto">
           {language === 'ru' 
-            ? 'Выберите план, который подходит вашему бизнесу. Отмена в любое время.'
-            : 'Choose the plan that fits your business. Cancel anytime.'}
+            ? 'Большинство создателей выбирают Pro. Попробуйте и вы.'
+            : 'Most creators choose Pro. See why.'}
         </p>
         
         {/* Social Proof */}
