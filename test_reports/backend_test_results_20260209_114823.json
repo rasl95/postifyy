@@ -1,0 +1,114 @@
+{
+  "timestamp": "2026-02-09T11:48:23.865468",
+  "base_url": "https://postify-ai-4.preview.emergentagent.com",
+  "tests_run": 15,
+  "tests_passed": 14,
+  "success_rate": "93.3%",
+  "results": [
+    {
+      "test": "User Registration",
+      "status": "PASSED",
+      "expected_status": 201,
+      "actual_status": 201,
+      "response_preview": "{'access_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RfNmEzYTIwODlAZXhhbXBsZS5jb20iLCJleHAiOjE3NzA3MjQwODN9.U09sgQwP8uFf_9MshUqcF_Kq6mfTD-ePRURwsHywnlk', 'token_type': 'bearer', 'u..."
+    },
+    {
+      "test": "User Login",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'access_token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InRlc3RfNmEzYTIwODlAZXhhbXBsZS5jb20iLCJleHAiOjE3NzA3MjQwODN9.U09sgQwP8uFf_9MshUqcF_Kq6mfTD-ePRURwsHywnlk', 'token_type': 'bearer', 'u..."
+    },
+    {
+      "test": "Get User Profile (/auth/me)",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'email': 'test_6a3a2089@example.com', 'full_name': 'Test User', 'subscription_plan': 'free', 'monthly_limit': 3, 'current_usage': 0, 'stripe_customer_id': 'cus_TwmVSoorabWj0V', 'onboarding_completed'..."
+    },
+    {
+      "test": "Get Templates",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'templates': {'social_post': [{'id': 'product_promo', 'name': {'en': 'Product Promotion', 'ru': '\u041f\u0440\u043e\u0434\u0432\u0438\u0436\u0435\u043d\u0438\u0435 \u043f\u0440\u043e\u0434\u0443\u043a\u0442\u0430'}, 'icon': '\ud83d\udecd\ufe0f', 'tone': 'selling', 'goal': 'sales', 'structure': 'Hook \u2192 Benefit..."
+    },
+    {
+      "test": "Generate Social Post",
+      "status": "FAILED",
+      "expected_status": 200,
+      "actual_status": 520,
+      "error": "{\"detail\":\"Content generation failed: Failed to generate chat completion: litellm.BadRequestError: OpenAIException - Budget has been excee\"}"
+    },
+    {
+      "test": "Generate AI Image",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'id': '237d333a-d7ba-47dc-b893-54fa341a6fd4', 'image_url': 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAABAAAAAQACAIAAADwf7zUAAFTL2NhQlgAAVMvanVtYgAAAB5qdW1kYzJwYQARABCAAACqADibcQNjMnBhAAAANvBqdW1iA..."
+    },
+    {
+      "test": "Create Stripe Checkout Session",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'checkout_url': 'https://checkout.stripe.com/c/pay/cs_live_b1smURq75X5ywvSB1qb2STYPQUAPnlxSeX4blNICHVE6s7Zv7oyX2zg4XU#fidnandhYHdWcXxpYCc%2FJ2FgY2RwaXEnKSdkdWxOYHwnPyd1blppbHNgWjA0VnJ1Mn1McmJwSzBzT2N..."
+    },
+    {
+      "test": "Save User Preferences",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'message': 'Preferences saved successfully', 'preferences': {'user_email': 'test_6a3a2089@example.com', 'content_goals': ['social_posts', 'ai_images'], 'platforms': ['instagram', 'tiktok'], 'business..."
+    },
+    {
+      "test": "Get User Preferences",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'preferences': {'user_email': 'test_6a3a2089@example.com', 'business_niche': 'marketing', 'content_goals': ['social_posts', 'ai_images'], 'platforms': ['instagram', 'tiktok'], 'preferred_tone': 'neut..."
+    },
+    {
+      "test": "Save Draft",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'saved': True, 'updated_at': '2026-02-09T11:48:23.621474+00:00'}"
+    },
+    {
+      "test": "Get Draft",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'draft': {'user_email': 'test_6a3a2089@example.com', 'draft_type': 'content', 'draft_data': {'content_type': 'social_post', 'topic': 'Test draft topic', 'tone': 'neutral'}, 'updated_at': '2026-02-09T..."
+    },
+    {
+      "test": "Get Initial Share Status",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'has_shared': False, 'bonus_claimed': False, 'share_details': None}"
+    },
+    {
+      "test": "Share First Post (Claim Bonus)",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'shared': True, 'bonus_granted': True, 'bonus_amount': 3, 'total_bonus_credits': 3, 'message': '+3 bonus credits!'}"
+    },
+    {
+      "test": "Share First Post Again (No Bonus)",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'shared': True, 'bonus_granted': False, 'bonus_amount': 0, 'total_bonus_credits': 3, 'message': 'Shared successfully'}"
+    },
+    {
+      "test": "Get Final Share Status",
+      "status": "PASSED",
+      "expected_status": 200,
+      "actual_status": 200,
+      "response_preview": "{'has_shared': True, 'bonus_claimed': True, 'share_details': {'platform': 'twitter', 'bonus_granted': True, 'bonus_amount': 3, 'created_at': '2026-02-09T11:48:23.737872+00:00'}}"
+    }
+  ]
+}
