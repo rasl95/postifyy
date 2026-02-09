@@ -359,8 +359,8 @@ code {
    ======================================== */
 
 /* Fix gray-600 and below to meet WCAG AA on dark bg */
-.dark .text-gray-600 { color: rgba(255, 255, 255, 0.45) !important; }
-.dark .text-gray-700 { color: rgba(255, 255, 255, 0.35) !important; }
+.dark .text-gray-600 { color: rgba(255, 255, 255, 0.5) !important; }
+.dark .text-gray-700 { color: rgba(255, 255, 255, 0.4) !important; }
 .dark .text-gray-800 { color: rgba(255, 255, 255, 0.25) !important; }
 
 /* Standardize card appearance */
