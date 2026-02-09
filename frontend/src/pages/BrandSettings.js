@@ -595,12 +595,22 @@ export const BrandSettings = () => {
           </div>
 
           {/* Skip hint on step 2 */}
-          {step === 2 && (
+          {step === 2 && !saved && (
             <p className="text-xs text-gray-600 text-center mt-3">
               {language === 'ru' 
                 ? 'Визуальный стиль — опциональный. Можете сохранить без него.' 
                 : 'Visual style is optional. You can save without it.'}
             </p>
+          )}
+
+          {/* Inline success banner */}
+          {saved && (
+            <div className="mt-3 flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/20 rounded-xl px-4 py-3" data-testid="save-success-banner">
+              <Check className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+              <p className="text-sm text-emerald-400">
+                {language === 'ru' ? 'Профиль бренда сохранён. AI будет использовать эти настройки.' : 'Brand profile saved. AI will use these settings.'}
+              </p>
+            </div>
           )}
         </div>
 
