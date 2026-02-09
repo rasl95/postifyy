@@ -379,10 +379,10 @@ export const PricingPage = () => {
 
             <Button
               variant="outline"
-              className={`w-full py-6 ${currentPlan === 'business'
+              className={`w-full py-6 ${getPlanStatus('business') !== 'upgrade'
                 ? 'bg-white/5 text-gray-400 border-white/10 cursor-default'
                 : 'border-purple-500/50 text-purple-400 hover:bg-purple-500/10 hover:border-purple-500'}`}
-              disabled={loadingPlan === 'business' || currentPlan === 'business' || checkoutLoading}
+              disabled={loadingPlan === 'business' || getPlanStatus('business') !== 'upgrade' || checkoutLoading}
               onClick={() => handleUpgrade('business')}
               data-testid="pricing-business-btn"
             >
@@ -391,8 +391,10 @@ export const PricingPage = () => {
                   <Clock className="w-4 h-4 animate-spin" />
                   {language === 'ru' ? 'Загрузка...' : 'Loading...'}
                 </span>
-              ) : currentPlan === 'business' ? (
+              ) : getPlanStatus('business') === 'current' ? (
                 language === 'ru' ? 'Текущий план' : 'Current Plan'
+              ) : getPlanStatus('business') === 'included' ? (
+                language === 'ru' ? 'Включено' : 'Included'
               ) : (
                 <>
                   {language === 'ru' ? 'Перейти на Business' : 'Upgrade to Business'}
