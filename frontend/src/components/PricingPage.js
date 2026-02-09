@@ -72,13 +72,12 @@ export const PricingPage = () => {
   const [loadingPlan, setLoadingPlan] = useState(null);
 
   const handleUpgrade = async (planId) => {
-    if (planId === 'free') {
-      toast.info(language === 'ru' ? 'Вы уже на бесплатном плане' : 'You are already on the free plan');
-      return;
-    }
-    
-    if (user?.subscription_plan === planId) {
-      toast.info(language === 'ru' ? 'Вы уже на этом плане' : 'You are already on this plan');
+    if (getPlanStatus(planId) !== 'upgrade') {
+      if (planId === currentPlan) {
+        toast.info(language === 'ru' ? 'Вы уже на этом плане' : 'You are already on this plan');
+      } else {
+        toast.info(language === 'ru' ? 'Этот план уже включён в ваш' : 'This plan is already included');
+      }
       return;
     }
 
