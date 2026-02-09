@@ -1,103 +1,119 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Lock, Sparkles, ArrowRight, Check, Crown, Zap, X } from 'lucide-react';
+import { Lock, Sparkles, ArrowRight, Check, Crown, Zap, X, Image, CalendarClock, Palette, BarChart3, Star, Layers } from 'lucide-react';
 import { Button } from './ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from './ui/dialog';
 import { usePricing, PRICING_CONFIG } from '../contexts/PricingContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { toast } from 'sonner';
 
-// Feature descriptions for upsell
-const FEATURE_INFO = {
-  brandAI: {
+// Contextual upsell configurations
+const UPSELL_CONFIGS = {
+  low_credits: {
     en: {
-      title: 'Brand AI Profile',
-      description: 'Create a unique brand identity that AI uses to generate on-brand content every time.',
-      benefits: ['Consistent brand voice', 'Custom color schemes', 'Automated brand guidelines']
+      title: 'Almost out of credits',
+      benefits: ['200 generations per month', 'No watermarks', 'Brand AI & analytics', 'AI post scheduler', 'Save & reuse templates']
     },
     ru: {
-      title: 'Brand AI Профиль',
-      description: 'Создайте уникальную идентичность бренда, которую AI использует для создания контента.',
-      benefits: ['Единый голос бренда', 'Ваши цветовые схемы', 'Автоматические гайдлайны']
+      title: 'Кредиты заканчиваются',
+      benefits: ['200 генераций в месяц', 'Без водяных знаков', 'Brand AI и аналитика', 'AI-планировщик', 'Сохранение шаблонов']
     }
   },
-  marketingSets: {
+  watermark: {
     en: {
-      title: 'Marketing Image Sets',
-      description: 'Generate complete marketing sets for all platforms in one click.',
-      benefits: ['Multi-platform formats', 'Consistent branding', 'Time-saving automation']
+      title: 'Remove watermark',
+      benefits: ['Clean, professional content', 'No "Created with Postify AI" tag', 'Full branding control', 'Brand AI for on-brand output']
     },
     ru: {
-      title: 'Маркетинг-наборы',
-      description: 'Создавайте полные маркетинговые наборы для всех платформ одним кликом.',
-      benefits: ['Форматы для всех платформ', 'Единый стиль', 'Экономия времени']
+      title: 'Убрать водяной знак',
+      benefits: ['Чистый, профессиональный контент', 'Без тега "Created with Postify AI"', 'Полный контроль брендинга', 'Brand AI для фирменного стиля']
     }
   },
-  advancedStyles: {
+  template_save: {
     en: {
-      title: 'Advanced Image Styles',
-      description: 'Access premium AI styles for unique, eye-catching visuals.',
-      benefits: ['15+ premium styles', 'Custom style mixing', 'Professional results']
+      title: 'Save templates for reuse',
+      benefits: ['Save your best prompts', 'Reuse templates instantly', 'Build a content library', 'Speed up content creation']
     },
     ru: {
-      title: 'Продвинутые стили',
-      description: 'Доступ к премиум AI стилям для уникальных визуалов.',
-      benefits: ['15+ премиум стилей', 'Микширование стилей', 'Профессиональный результат']
+      title: 'Сохранение шаблонов',
+      benefits: ['Сохраняйте лучшие промпты', 'Переиспользуйте шаблоны', 'Создайте библиотеку контента', 'Ускорьте создание контента']
     }
   },
-  analytics: {
+  scheduler: {
     en: {
-      title: 'Analytics Dashboard',
-      description: 'Track your content performance and optimize your strategy.',
-      benefits: ['Usage insights', 'Content performance', 'Trend analysis']
+      title: 'Plan your content',
+      benefits: ['AI-powered scheduling suggestions', 'Content calendar', 'Best time to post', 'Never miss a posting day']
     },
     ru: {
-      title: 'Панель аналитики',
-      description: 'Отслеживайте эффективность контента и оптимизируйте стратегию.',
-      benefits: ['Статистика использования', 'Эффективность контента', 'Анализ трендов']
+      title: 'Планируйте контент',
+      benefits: ['AI-рекомендации по расписанию', 'Календарь контента', 'Лучшее время публикации', 'Не пропускайте дни постинга']
     }
   },
   favorites: {
     en: {
-      title: 'Favorites & Collections',
-      description: 'Save and organize your best content for easy access.',
-      benefits: ['Unlimited favorites', 'Custom folders', 'Quick access']
+      title: 'Save your best content',
+      benefits: ['Unlimited favorites', 'Quick access to top posts', 'Build a content library', 'Reuse winning content']
     },
     ru: {
-      title: 'Избранное и коллекции',
-      description: 'Сохраняйте и организуйте лучший контент.',
-      benefits: ['Неограниченное избранное', 'Папки', 'Быстрый доступ']
+      title: 'Сохраняйте лучший контент',
+      benefits: ['Безлимитное избранное', 'Быстрый доступ к лучшим постам', 'Библиотека контента', 'Повторное использование']
+    }
+  },
+  analytics: {
+    en: {
+      title: 'Track your performance',
+      benefits: ['Content analytics dashboard', 'AI recommendations', 'Usage insights', 'Performance scoring']
+    },
+    ru: {
+      title: 'Отслеживайте результаты',
+      benefits: ['Панель аналитики', 'AI-рекомендации', 'Статистика использования', 'Оценка контента']
+    }
+  },
+  brandAI: {
+    en: {
+      title: 'On-brand content every time',
+      benefits: ['Save brand colors & tone', 'AI applies your style', 'Consistent visual identity', 'Professional output']
+    },
+    ru: {
+      title: 'Контент в стиле бренда',
+      benefits: ['Сохраняйте цвета и тон', 'AI применяет ваш стиль', 'Единый визуальный стиль', 'Профессиональный результат']
     }
   },
   default: {
     en: {
-      title: 'Pro Feature',
-      description: 'Unlock this feature with a Pro or Business plan.',
-      benefits: ['Full access', 'Premium support', 'Regular updates']
+      title: 'Unlock full content workflow',
+      benefits: ['200 generations per month', 'No watermarks on content', 'Brand AI & analytics', 'AI scheduler & templates', 'Extended tones & CTA goals']
     },
     ru: {
-      title: 'Pro функция',
-      description: 'Разблокируйте эту функцию с Pro или Business планом.',
-      benefits: ['Полный доступ', 'Премиум поддержка', 'Регулярные обновления']
+      title: 'Разблокируйте полный доступ',
+      benefits: ['200 генераций в месяц', 'Контент без водяных знаков', 'Brand AI и аналитика', 'AI-планировщик и шаблоны', 'Расширенные тоны и CTA-цели']
     }
   }
 };
 
-// Upgrade Modal Component
 export const UpgradeModal = ({ isOpen, onClose, feature = null, trigger = 'feature' }) => {
   const { language } = useLanguage();
   const navigate = useNavigate();
   const { createCheckout, checkoutLoading, getUsageStats } = usePricing();
   const [loadingPlan, setLoadingPlan] = useState(null);
   
-  const featureInfo = feature ? (FEATURE_INFO[feature] || FEATURE_INFO.default) : FEATURE_INFO.default;
-  const info = featureInfo[language] || featureInfo.en;
   const stats = getUsageStats();
+  
+  // Determine config based on trigger/feature
+  const configKey = trigger === 'low_credits' ? 'low_credits' 
+    : trigger === 'watermark' ? 'watermark'
+    : trigger === 'template_save' ? 'template_save'
+    : trigger === 'scheduler' ? 'scheduler'
+    : feature && UPSELL_CONFIGS[feature] ? feature 
+    : 'default';
+  
+  const config = UPSELL_CONFIGS[configKey];
+  const info = config[language] || config.en;
 
-  const handleUpgrade = async (plan) => {
-    setLoadingPlan(plan);
+  const handleUpgrade = async () => {
+    setLoadingPlan('pro');
     try {
-      const checkoutUrl = await createCheckout(plan);
+      const checkoutUrl = await createCheckout('pro');
       if (checkoutUrl) {
         window.location.href = checkoutUrl;
       }
@@ -113,133 +129,78 @@ export const UpgradeModal = ({ isOpen, onClose, feature = null, trigger = 'featu
     navigate('/pricing');
   };
 
-  // Different headers based on trigger
-  const getHeaderContent = () => {
-    switch (trigger) {
-      case 'limit':
-        return {
-          icon: <Zap className="w-6 h-6 text-[#FF3B30]" />,
-          title: language === 'ru' ? 'Лимит достигнут' : 'Limit Reached',
-          subtitle: language === 'ru' 
-            ? `Вы использовали ${stats.currentUsage} из ${stats.monthlyLimit} генераций`
-            : `You've used ${stats.currentUsage} of ${stats.monthlyLimit} generations`
-        };
-      case 'low_credits':
-        return {
-          icon: <Zap className="w-6 h-6 text-yellow-500" />,
-          title: language === 'ru' ? 'Кредиты заканчиваются' : 'Credits Running Low',
-          subtitle: language === 'ru' 
-            ? `Осталось ${stats.remainingCredits} генераций`
-            : `${stats.remainingCredits} generations remaining`
-        };
-      default:
-        return {
-          icon: <Lock className="w-6 h-6 text-[#FF3B30]" />,
-          title: info.title,
-          subtitle: info.description
-        };
-    }
-  };
-
-  const header = getHeaderContent();
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-lg bg-[#0A0A0B] border-white/10" data-testid="upgrade-modal">
-        <button
-          onClick={onClose}
-          className="absolute right-4 top-4 text-gray-500 hover:text-white transition-colors"
-        >
+      <DialogContent className="sm:max-w-md bg-[#0A0A0B] border-white/10" data-testid="upgrade-modal">
+        <button onClick={onClose} className="absolute right-4 top-4 text-gray-500 hover:text-white transition-colors">
           <X className="w-5 h-5" />
         </button>
         
         <DialogHeader className="text-center pt-2">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-[#FF3B30]/10 border border-[#FF3B30]/20 flex items-center justify-center">
-            {header.icon}
+          <div className="w-14 h-14 mx-auto mb-4 rounded-2xl bg-[#FF3B30]/10 border border-[#FF3B30]/20 flex items-center justify-center">
+            <Lock className="w-6 h-6 text-[#FF3B30]" />
           </div>
-          <DialogTitle className="text-2xl text-white" style={{ fontFamily: 'Manrope, sans-serif' }}>
-            {header.title}
+          <DialogTitle className="text-xl text-white" data-testid="upgrade-modal-title">
+            {info.title}
           </DialogTitle>
-          <DialogDescription className="text-gray-400 mt-2">{header.subtitle}</DialogDescription>
+          <DialogDescription className="text-gray-400 mt-2">
+            {language === 'ru' 
+              ? 'Разблокируйте Pro и получите полный контроль над контентом'
+              : 'Unlock Pro to get full control over your content'}
+          </DialogDescription>
         </DialogHeader>
 
-        {/* Benefits */}
-        {feature && (
-          <div className="space-y-2 py-4">
-            {info.benefits.map((benefit, idx) => (
-              <div key={idx} className="flex items-center gap-3">
-                <div className="w-5 h-5 rounded-full bg-[#FF3B30]/20 flex items-center justify-center flex-shrink-0">
-                  <Check className="w-3 h-3 text-[#FF3B30]" />
-                </div>
-                <span className="text-sm text-gray-300">{benefit}</span>
+        {/* Benefits list */}
+        <div className="space-y-2.5 py-4">
+          {info.benefits.map((benefit, idx) => (
+            <div key={idx} className="flex items-center gap-3">
+              <div className="w-5 h-5 rounded-full bg-[#FF3B30]/15 flex items-center justify-center flex-shrink-0">
+                <Check className="w-3 h-3 text-[#FF3B30]" />
               </div>
-            ))}
+              <span className="text-sm text-gray-300">{benefit}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Credits warning if applicable */}
+        {trigger === 'low_credits' && (
+          <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 mb-2">
+            <div className="flex items-center gap-2 text-sm text-yellow-400">
+              <Zap className="w-4 h-4" />
+              <span>{language === 'ru' 
+                ? `Осталось ${stats.remainingCredits} из ${stats.monthlyLimit} генераций` 
+                : `${stats.remainingCredits} of ${stats.monthlyLimit} generations remaining`}</span>
+            </div>
           </div>
         )}
 
-        {/* Quick Plan Options */}
-        <div className="space-y-3 py-4">
-          {/* Pro Option */}
-          <button
-            onClick={() => handleUpgrade('pro')}
-            disabled={checkoutLoading || loadingPlan}
-            className="w-full p-4 rounded-xl border-2 border-[#FF3B30] bg-[#FF3B30]/5 hover:bg-[#FF3B30]/10 transition-all group"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-[#FF3B30]/20 flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 text-[#FF3B30]" />
-                </div>
-                <div className="text-left">
-                  <div className="font-semibold text-white">Pro</div>
-                  <div className="text-sm text-gray-400">
-                    {language === 'ru' ? '200 генераций/мес' : '200 generations/mo'}
-                  </div>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="font-bold text-white">€15<span className="text-sm text-gray-500">/mo</span></div>
-                <ArrowRight className="w-4 h-4 text-[#FF3B30] ml-auto group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-          </button>
-
-          {/* Business Option */}
-          <button
-            onClick={() => handleUpgrade('business')}
-            disabled={checkoutLoading || loadingPlan}
-            className="w-full p-4 rounded-xl border border-white/10 hover:border-purple-500/50 bg-white/5 hover:bg-purple-500/5 transition-all group"
-          >
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                  <Crown className="w-5 h-5 text-purple-400" />
-                </div>
-                <div className="text-left">
-                  <div className="font-semibold text-white">Business</div>
-                  <div className="text-sm text-gray-400">
-                    {language === 'ru' ? '600 генераций/мес' : '600 generations/mo'}
-                  </div>
-                </div>
-              </div>
-              <div className="text-right">
-                <div className="font-bold text-white">€39<span className="text-sm text-gray-500">/mo</span></div>
-                <ArrowRight className="w-4 h-4 text-purple-400 ml-auto group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-          </button>
-        </div>
+        {/* Single CTA - Pro focused */}
+        <Button
+          onClick={handleUpgrade}
+          disabled={checkoutLoading || loadingPlan}
+          className="w-full h-12 bg-[#FF3B30] hover:bg-[#FF4D42] text-white font-semibold shadow-lg shadow-[#FF3B30]/25"
+          data-testid="upgrade-unlock-pro-btn"
+        >
+          {loadingPlan ? (
+            <span className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              {language === 'ru' ? 'Загрузка...' : 'Loading...'}
+            </span>
+          ) : (
+            <>
+              <Sparkles className="w-4 h-4 mr-2" />
+              {language === 'ru' ? 'Разблокировать Pro — €15/мес' : 'Unlock Pro — €15/mo'}
+            </>
+          )}
+        </Button>
 
         {/* Footer */}
-        <div className="flex flex-col items-center gap-2 pt-2">
-          <button
-            onClick={goToPricing}
-            className="text-sm text-gray-500 hover:text-white transition-colors"
-          >
-            {language === 'ru' ? 'Сравнить все планы →' : 'Compare all plans →'}
+        <div className="flex flex-col items-center gap-2 pt-1">
+          <button onClick={goToPricing} className="text-sm text-gray-500 hover:text-white transition-colors" data-testid="upgrade-compare-plans-btn">
+            {language === 'ru' ? 'Сравнить все планы' : 'Compare all plans'} →
           </button>
           <p className="text-xs text-gray-600">
-            {language === 'ru' ? 'Отмена в любое время • Безопасная оплата' : 'Cancel anytime • Secure payment'}
+            {language === 'ru' ? 'Отмена в любое время · Безопасная оплата' : 'Cancel anytime · Secure payment'}
           </p>
         </div>
       </DialogContent>
@@ -252,18 +213,11 @@ export const FeatureLock = ({ feature, children, showLockIcon = true }) => {
   const { hasFeatureAccess, showUpgradeModal } = usePricing();
   const hasAccess = hasFeatureAccess(feature);
 
-  if (hasAccess) {
-    return children;
-  }
+  if (hasAccess) return children;
 
   return (
-    <div 
-      className="relative cursor-pointer group"
-      onClick={() => showUpgradeModal(feature)}
-    >
-      <div className="opacity-50 pointer-events-none">
-        {children}
-      </div>
+    <div className="relative cursor-pointer group" onClick={() => showUpgradeModal(feature)}>
+      <div className="opacity-50 pointer-events-none">{children}</div>
       {showLockIcon && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity">
           <div className="flex items-center gap-2 bg-[#FF3B30] text-white px-3 py-1.5 rounded-full text-sm font-medium">
@@ -285,7 +239,7 @@ export const LowCreditsBanner = ({ onUpgrade }) => {
   if (!isCreditsLow()) return null;
 
   return (
-    <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 rounded-xl p-4 mb-6">
+    <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 border border-yellow-500/20 rounded-xl p-4 mb-6" data-testid="low-credits-banner">
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center">
@@ -298,18 +252,12 @@ export const LowCreditsBanner = ({ onUpgrade }) => {
                 : `${stats.remainingCredits} generations left`}
             </p>
             <p className="text-xs text-gray-400">
-              {language === 'ru' 
-                ? 'Перейдите на Pro для неограниченного контента'
-                : 'Upgrade to Pro for unlimited content'}
+              {language === 'ru' ? 'Разблокируйте полный доступ' : 'Unlock full access'}
             </p>
           </div>
         </div>
-        <Button
-          size="sm"
-          className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium"
-          onClick={onUpgrade}
-        >
-          {language === 'ru' ? 'Улучшить' : 'Upgrade'}
+        <Button size="sm" className="bg-yellow-500 hover:bg-yellow-600 text-black font-medium" onClick={onUpgrade} data-testid="low-credits-upgrade-btn">
+          {language === 'ru' ? 'Разблокировать' : 'Unlock'}
         </Button>
       </div>
     </div>
