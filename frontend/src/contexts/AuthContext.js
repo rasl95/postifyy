@@ -27,8 +27,7 @@ export const AuthProvider = ({ children }) => {
         setToken(storedToken);
         try {
           const response = await axios.get(`${API_URL}/api/auth/me`, {
-            headers: { Authorization: `Bearer ${storedToken}` },
-            withCredentials: true
+            headers: { Authorization: `Bearer ${storedToken}` }
           });
           setUser(response.data);
         } catch (error) {
@@ -47,8 +46,7 @@ export const AuthProvider = ({ children }) => {
   const checkAuth = async () => {
     try {
       const response = await axios.get(`${API_URL}/api/auth/me`, {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true
+        headers: { Authorization: `Bearer ${token}` }
       });
       setUser(response.data);
     } catch (error) {
@@ -106,8 +104,7 @@ export const AuthProvider = ({ children }) => {
   const processGoogleAuth = async (sessionId) => {
     const response = await axios.post(
       `${API_URL}/api/auth/google/session`,
-      { session_id: sessionId },
-      { withCredentials: true }
+      { session_id: sessionId }
     );
     const { access_token, user } = response.data;
     localStorage.setItem('token', access_token);
@@ -125,7 +122,9 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post(`${API_URL}/api/auth/logout`, {}, { withCredentials: true });
+      await axios.post(`${API_URL}/api/auth/logout`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
     } catch (error) {
       console.error('Logout API error:', error);
     }
