@@ -788,53 +788,41 @@ export const MarketingCampaigns = () => {
             campaigns.map(campaign => (
               <Card 
                 key={campaign.id}
-                className="bg-white/5 border-white/10 hover:border-[#FF3B30]/30 transition-all cursor-pointer group"
+                className="bg-[#111113] border-white/[0.06] hover:border-white/15 transition-all cursor-pointer group"
                 onClick={() => setSelectedCampaign(campaign)}
                 data-testid={`campaign-card-${campaign.id}`}
               >
                 <CardContent className="p-5">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#FF3B30] to-[#FF6A3D] flex items-center justify-center">
-                      <Target className="w-6 h-6 text-white" />
+                  <div className="flex items-start justify-between mb-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#FF3B30] to-[#FF6A3D] flex items-center justify-center">
+                      <Target className="w-5 h-5 text-white" />
                     </div>
-                    <Badge variant={campaign.status === 'ready' ? 'default' : 'secondary'}>
-                      {campaign.status === 'ready' ? t.ready : t.draft}
-                    </Badge>
+                    {campaign.status === 'ready' && (
+                      <span className="text-xs text-emerald-400">{t.ready}</span>
+                    )}
                   </div>
                   
-                  <h3 className="font-semibold text-white mb-2 group-hover:text-[#FF3B30] transition-colors">
+                  <h3 className="font-semibold text-white mb-1.5 group-hover:text-[#FF3B30] transition-colors">
                     {campaign.name}
                   </h3>
                   
-                  <div className="flex items-center gap-3 text-sm text-gray-400 mb-4">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3" />
-                      {campaign.duration_days} {t.days}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <MessageCircle className="w-3 h-3" />
-                      {campaign.total_posts} {t.posts}
-                    </span>
-                  </div>
+                  <p className="text-sm text-gray-500 mb-3">
+                    {campaign.duration_days} {t.days} · {campaign.total_posts} {t.posts}
+                  </p>
                   
-                  {/* Mini Pillar Bar */}
-                  <div className="flex gap-0.5 h-1.5 rounded-full overflow-hidden bg-white/5">
+                  {/* Content mix — compact dots */}
+                  <div className="flex flex-wrap gap-x-3 gap-y-1">
                     {campaign.content_mix?.map((item, i) => (
-                      <div 
-                        key={i}
-                        className="h-full"
-                        style={{ 
-                          width: `${item.percentage}%`, 
-                          backgroundColor: item.pillar_info.color 
-                        }}
-                      />
+                      <span key={i} className="inline-flex items-center gap-1 text-xs text-gray-500">
+                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: item.pillar_info.color }} />
+                        {language === 'ru' ? item.pillar_info.name_ru : item.pillar_info.name}
+                      </span>
                     ))}
                   </div>
                   
                   {campaign.quality_score && (
-                    <div className="mt-3 flex items-center justify-between text-sm">
-                      <span className="text-gray-500">{t.qualityScore}</span>
-                      <span className="font-medium text-white">{campaign.quality_score.score}/100</span>
+                    <div className="mt-3 text-sm text-gray-500">
+                      {t.qualityScore}: <span className="text-white font-medium">{campaign.quality_score.score}/100</span>
                     </div>
                   )}
                 </CardContent>
